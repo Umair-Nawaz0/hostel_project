@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+
+    <link rel="stylesheet" href="../css/admin_css/dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- Hamburger -->
+<div class="hamburger" id="hamburger">☰</div>
+
+<!-- Overlay -->
+<div class="overlay" id="overlay"></div>
+
+<div class="dashboard">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <h2>Hostel Admin</h2>
+        <ul>
+            <li class="active">Dashboard</li>
+            <li>Students</li>
+            <li>Rooms</li>
+            <li>Allocations</li>
+            <li>Payments</li>
+            <li>Complaints</li>
+            <li>Staff</li>
+            <li>Inventory</li>
+            <li>Logout</li>
+        </ul>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+
+        <div class="topbar">
+            <h1>Dashboard</h1>
+            <div class="profile">Admin</div>
+        </div>
+
+        <div class="cards">
+
+            <div class="card">
+                <h3>Total Students</h3>
+                <p id="students">0</p>
+            </div>
+
+            <div class="card">
+                <h3>Total Rooms</h3>
+                <p id="rooms">0</p>
+            </div>
+
+            <div class="card">
+                <h3>Available Rooms</h3>
+                <p id="available">0</p>
+            </div>
+
+            <div class="card">
+                <h3>Complaints</h3>
+                <p id="complaints">0</p>
+            </div>
+
+        </div>
+
+        <div class="table-section">
+            <h2>Recent Complaints</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Issue</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="tableData"></tbody>
+            </table>
+        </div>
+
+    </main>
+
+</div>
+
+<script src="../js/admin_js/dashboard.js"></script>
+</body>
+</html>
