@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Allocations</title>
+
+<link rel="stylesheet" href="../css/admin_css/allocations.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="hamburger" id="hamburger">☰</div>
+<div class="overlay" id="overlay"></div>
+
+<div class="dashboard">
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+    <h2>Hostel Admin</h2>
+    <ul>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="students.html">Students</a></li>
+        <li><a href="rooms.html">Rooms</a></li>
+        <li class="active"><a href="allocations.html">Allocations</a></li>
+        <li><a href="payments.html">Payments</a></li>
+        <li><a href="complaints.html">Complaints</a></li>
+        <li><a href="staff.html">Staff</a></li>
+        <li><a href="inventory.html">Inventory</a></li>
+        <li><a href="login.html">Logout</a></li>
+    </ul>
+</aside>
+
+<!-- Main -->
+<main class="main">
+
+<div class="topbar">
+    <h1>Room Allocations</h1>
+    <button id="openModal">+ Assign Room</button>
+</div>
+
+<div class="search-box">
+    <input id="search" placeholder="Search student or room...">
+</div>
+
+<div class="table-section">
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Student</th>
+<th>Room</th>
+<th>Date</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="table"></tbody>
+</table>
+</div>
+
+</main>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="modal">
+<div class="modal-box">
+
+<h2>Assign Room</h2>
+
+<input id="studentName" placeholder="Student Name">
+<input id="roomNo" placeholder="Room Number">
+
+<div class="modal-actions">
+<button id="save">Assign</button>
+<button id="close">Cancel</button>
+</div>
+
+</div>
+</div>
+
+<script src="../js/admin_js/allocations.js"></script>
+</body>
+</html>

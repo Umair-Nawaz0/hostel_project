@@ -1,0 +1,184 @@
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+    font-family:'Poppins',sans-serif;
+    background:#0f172a;
+    color:#e2e8f0;
+}
+
+/* Layout */
+.dashboard{display:flex;}
+
+/* Sidebar */
+.sidebar{
+    width:240px;
+    height:100vh;
+    background:#020617;
+    padding:20px;
+    position:fixed;
+    z-index:1002;
+}
+
+.sidebar h2{
+    color:#38bdf8;
+    margin-bottom:30px;
+}
+
+.sidebar ul{list-style:none;}
+
+.sidebar li{
+    padding:12px;
+    border-radius:8px;
+    margin-bottom:10px;
+}
+
+.sidebar li:hover,
+.sidebar .active{
+    background:#1e293b;
+}
+
+.sidebar a{
+    text-decoration:none;
+    color:inherit;
+    display:block;
+}
+
+/* Main */
+.main{
+    margin-left:240px;
+    padding:25px;
+    width:100%;
+}
+
+/* Topbar */
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.topbar button{
+    background:#38bdf8;
+    border:none;
+    padding:10px 18px;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+/* Search */
+.search-box input{
+    width:100%;
+    padding:10px;
+    margin-bottom:15px;
+    border:none;
+    border-radius:6px;
+    background:#1e293b;
+    color:white;
+}
+
+/* Table */
+.table-section{
+    background:#1e293b;
+    padding:15px;
+    border-radius:10px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    padding:12px;
+}
+
+tr:hover{
+    background:#334155;
+}
+
+/* Status */
+.status{
+    padding:5px 10px;
+    border-radius:6px;
+    font-size:12px;
+}
+
+.active-status{background:#22c55e;}
+.vacated{background:#ef4444;}
+
+/* Modal */
+.modal{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    display:none;
+    justify-content:center;
+    align-items:center;
+    background:rgba(0,0,0,0.7);
+    z-index:2000;
+}
+
+.modal-box{
+    background:#1e293b;
+    padding:25px;
+    border-radius:10px;
+    width:320px;
+}
+
+.modal-box input{
+    width:100%;
+    margin:10px 0;
+    padding:10px;
+}
+
+.modal-actions{
+    display:flex;
+    justify-content:space-between;
+}
+
+/* Hamburger */
+.hamburger{
+    display:none;
+    position:fixed;
+    top:15px;
+    left:15px;
+    font-size:22px;
+    z-index:2001;
+}
+
+.overlay{
+    display:none;
+}
+
+/* Mobile */
+@media(max-width:700px){
+
+.hamburger{
+    display:block;
+}
+
+.sidebar{
+    left:-260px;
+    transition:0.3s;
+}
+
+.sidebar.active{
+    left:0;
+}
+
+.overlay.active{
+    display:block;
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.6);
+    z-index:1001;
+}
+
+.main{
+    margin-left:0;
+}
+}
