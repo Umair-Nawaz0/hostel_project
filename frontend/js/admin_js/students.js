@@ -108,7 +108,3 @@ document.getElementById("search").oninput = function(){
 
 // INIT
 render();
-
-function go(page) {
-    window.location.href = page;
-}

@@ -178,3 +178,10 @@ tr:hover {
         grid-template-columns: 1fr;
     }
 }
+
+.sidebar a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    width: 100%;
+}

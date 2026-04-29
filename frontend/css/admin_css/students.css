@@ -201,3 +201,10 @@ tr:hover{
     margin-left:0;
 }
 }
+
+.sidebar a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    width: 100%;
+}
