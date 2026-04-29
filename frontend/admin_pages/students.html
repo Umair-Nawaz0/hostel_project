@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Students</title>
+
+<link rel="stylesheet" href="../css/admin_css/students.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+</head>
+<body>
+
+<div class="hamburger" id="hamburger">☰</div>
+<div class="overlay" id="overlay"></div>
+
+<div class="dashboard">
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+    <h2>Hostel Admin</h2>
+    <ul>
+    <li onclick="go('dashboard.html')">Dashboard</li>
+    <li class="active" onclick="go('students.html')">Students</li>
+    <li onclick="go('rooms.html')">Rooms</li>
+    <li onclick="go('allocations.html')">Allocations</li>
+    <li onclick="go('payments.html')">Payments</li>
+    <li onclick="go('complaints.html')">Complaints</li>
+    <li onclick="go('staff.html')">Staff</li>
+    <li onclick="go('inventory.html')">Inventory</li>
+    <li onclick="go('login.html')">Logout</li>
+</ul>
+</aside>
+
+<!-- Main -->
+<main class="main">
+
+<div class="topbar">
+    <h1>Students</h1>
+    <button id="addBtn">+ Add Student</button>
+</div>
+
+<div class="search-box">
+    <input type="text" id="search" placeholder="Search student...">
+</div>
+
+<div class="table-section">
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Room</th>
+<th>Contact</th>
+<th>Actions</th>
+</tr>
+</thead>
+<tbody id="studentTable"></tbody>
+</table>
+</div>
+
+</main>
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+<div class="modal-box">
+
+<h2 id="modalTitle">Add Student</h2>
+
+<input type="text" id="name" placeholder="Student Name">
+<input type="text" id="room" placeholder="Room No">
+<input type="text" id="contact" placeholder="Contact">
+
+<div class="modal-actions">
+<button id="saveBtn">Save</button>
+<button id="cancelBtn">Cancel</button>
+</div>
+
+</div>
+</div>
+
+<script src="../js/admin_js/students.js"></script>
+
+</body>
+</html>
