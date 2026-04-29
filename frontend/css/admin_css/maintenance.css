@@ -1,0 +1,175 @@
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+    font-family:'Poppins',sans-serif;
+    background:#0f172a;
+    color:#e2e8f0;
+}
+
+.dashboard{display:flex;}
+
+/* Sidebar FIXED */
+.sidebar{
+    width:240px;
+    height:100vh;
+    background:#020617;
+    padding:20px;
+    position:fixed;
+    overflow-y:auto;   /* ✅ scroll fix */
+}
+
+.sidebar ul{
+    list-style:none;   /* ✅ no bullets */
+}
+
+.sidebar li{
+    padding:12px;
+    border-radius:8px;
+    margin-bottom:8px;
+}
+
+.sidebar li:hover,
+.sidebar .active{
+    background:#1e293b;
+}
+
+.sidebar a{
+    text-decoration:none;
+    color:inherit;
+    display:block;
+}
+
+/* Main */
+.main{
+    margin-left:240px;
+    padding:25px;
+    width:100%;
+}
+
+/* Topbar */
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:20px;
+}
+
+.topbar button{
+    background:#38bdf8;
+    border:none;
+    padding:10px 18px;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+/* Search */
+.search-box input{
+    width:100%;
+    padding:10px;
+    margin-bottom:15px;
+    border-radius:6px;
+    border:none;
+    background:#1e293b;
+    color:white;
+}
+
+/* Table */
+.table-section{
+    background:#1e293b;
+    padding:15px;
+    border-radius:10px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    padding:12px;
+}
+
+tr:hover{
+    background:#334155;
+}
+
+/* Status */
+.status{
+    padding:4px 10px;
+    border-radius:5px;
+    font-size:12px;
+}
+
+.pending{background:#f59e0b;}
+.completed{background:#22c55e;}
+
+/* Buttons */
+.btn{
+    padding:6px 10px;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    margin-right:5px;
+}
+
+.edit{background:#22c55e;}
+.delete{background:#ef4444;}
+
+/* Modal FIXED */
+.modal{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    display:none;
+    justify-content:center;
+    align-items:center;  /* ✅ center fix */
+    background:rgba(0,0,0,0.7);
+}
+
+.modal-box{
+    background:#1e293b;
+    padding:25px;
+    border-radius:10px;
+    width:320px;
+}
+
+.modal-box input,
+.modal-box textarea,
+.modal-box select{
+    width:100%;
+    margin:10px 0;
+    padding:10px;
+}
+
+/* Mobile */
+.hamburger{
+    display:none;
+    position:fixed;
+    top:15px;
+    left:15px;
+}
+
+.overlay{display:none;}
+
+@media(max-width:700px){
+
+.hamburger{display:block;}
+
+.sidebar{
+    left:-260px;
+    transition:0.3s;
+}
+
+.sidebar.active{left:0;}
+
+.overlay.active{
+    display:block;
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.6);
+}
+
+.main{margin-left:0;}
+}
