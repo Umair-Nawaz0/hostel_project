@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complaints</title>
+
+<link rel="stylesheet" href="../css/admin_css/complaints.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="hamburger" id="hamburger">☰</div>
+<div class="overlay" id="overlay"></div>
+
+<div class="dashboard">
+
+<aside class="sidebar" id="sidebar">
+    <h2>Hostel Admin</h2>
+    <ul>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="students.html">Students</a></li>
+        <li><a href="rooms.html">Rooms</a></li>
+        <li><a href="allocations.html">Allocations</a></li>
+        <li><a href="payments.html">Payments</a></li>
+        <li class="active"><a href="complaints.html">Complaints</a></li>
+        <li><a href="staff.html">Staff</a></li>
+        <li><a href="inventory.html">Inventory</a></li>
+        <li><a href="login.html">Logout</a></li>
+    </ul>
+</aside>
+
+<main class="main">
+
+<div class="topbar">
+    <h1>Complaints</h1>
+    <button id="openModal">+ Add Complaint</button>
+</div>
+
+<div class="search-box">
+    <input id="search" placeholder="Search complaints...">
+</div>
+
+<div class="table-section">
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Student</th>
+<th>Complaint</th>
+<th>Date</th>
+<th>Status</th>
+<th>Actions</th>
+</tr>
+</thead>
+<tbody id="table"></tbody>
+</table>
+</div>
+
+</main>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="modal">
+<div class="modal-box">
+
+<h2>Add Complaint</h2>
+
+<input id="student" placeholder="Student Name">
+<textarea id="complaintText" placeholder="Enter complaint..." rows="3"></textarea>
+
+<div class="modal-actions">
+<button id="save">Submit</button>
+<button id="close">Cancel</button>
+</div>
+
+</div>
+</div>
+
+<script src="../js/admin_js/complaints.js"></script>
+</body>
+</html>
