@@ -4,88 +4,246 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/admin_css/dashboard.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="min-h-screen bg-slate-950 text-white">
+    <div class="dashboard-bg"></div>
+    <div class="dashboard-noise"></div>
+    <div id="mobileOverlay" class="mobile-overlay"></div>
 
-<!-- Hamburger -->
-<div class="hamburger" id="hamburger">☰</div>
+    <div class="relative flex min-h-screen">
+        <aside id="sidebar" class="sidebar-shell fixed inset-y-0 left-0 z-40 flex w-72 flex-col border-r border-white/10 px-4 py-5 transition-all duration-300 lg:translate-x-0">
+            <div class="flex items-center justify-between px-2">
+                <div class="sidebar-brand flex items-center gap-3">
+                    <div class="flex h-12 w-12 items-center justify-center rounded-2xl border border-cyan-400/20 bg-cyan-400/10 text-cyan-200 shadow-[0_0_30px_rgba(34,211,238,0.18)]">
+                        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M3 10.5 12 4l9 6.5"></path>
+                            <path d="M5 9.5V20h14V9.5"></path>
+                            <path d="M9.5 20v-5a2.5 2.5 0 0 1 5 0v5"></path>
+                        </svg>
+                    </div>
+                    <div class="sidebar-copy">
+                        <p class="text-sm font-medium uppercase tracking-[0.22em] text-cyan-200/80">Hostel OS</p>
+                        <h1 class="text-lg font-semibold text-white">Admin Panel</h1>
+                    </div>
+                </div>
 
-<!-- Overlay -->
-<div class="overlay" id="overlay"></div>
-
-<div class="dashboard">
-
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-        <h2>Hostel Admin</h2>
-        <ul>
-    <li class="active"><a href="dashboard.html">Dashboard</a></li>
-    <li><a href="students.html">Students</a></li>
-    <li><a href="rooms.html">Rooms</a></li>
-    <li><a href="allocations.html">Allocations</a></li>
-    <li><a href="payments.html">"Payments</a></li>
-    <li><a href="complaints.html">Complaints</a></li>
-    <li><a href="staff.html">Staff</a></li>
-    <li><a href="inventory.html">Inventory</a></li>
-    <li><a href="login.html">Logout</a></li>
-</ul>
-    </aside>
-
-    <!-- Main -->
-    <main class="main">
-
-        <div class="topbar">
-            <h1>Dashboard</h1>
-            <div class="profile">Admin</div>
-        </div>
-
-        <div class="cards">
-
-            <div class="card">
-                <h3>Total Students</h3>
-                <p id="students">0</p>
+                <button id="sidebarToggle" class="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-slate-300 transition hover:border-cyan-400/30 hover:text-white focus:outline-none" aria-label="Toggle sidebar">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M4 12h16"></path>
+                        <path d="M4 6h16"></path>
+                        <path d="M10 18h10"></path>
+                    </svg>
+                </button>
             </div>
 
-            <div class="card">
-                <h3>Total Rooms</h3>
-                <p id="rooms">0</p>
+            <nav class="mt-8 flex-1 overflow-y-auto">
+                <ul class="space-y-2">
+                    <li><a href="dashboard.html" class="nav-item active"><span class="nav-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h8V3H3z"></path><path d="M13 21h8V11h-8z"></path><path d="M13 3h8v4h-8z"></path><path d="M3 21h8v-4H3z"></path></svg></span><span class="nav-label">Dashboard</span></a></li>
+                    <li><a href="#" class="nav-item"><span class="nav-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"></path><path d="M5 21V7l8-4 6 3v15"></path><path d="M9 9h.01"></path><path d="M9 13h.01"></path><path d="M9 17h.01"></path><path d="M15 13h.01"></path><path d="M15 17h.01"></path></svg></span><span class="nav-label">Hostels</span></a></li>
+                    <li><a href="rooms.html" class="nav-item"><span class="nav-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 4l9 6.5"></path><path d="M5 9.5V20h14V9.5"></path></svg></span><span class="nav-label">Rooms</span></a></li>
+                    <li><a href="students.html" class="nav-item"><span class="nav-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"></path><circle cx="9.5" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span><span class="nav-label">Students</span></a></li>
+                    <li><a href="staff.html" class="nav-item"><span class="nav-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span><span class="nav-label">Staff / Wardens</span></a></li>
+                    <li><a href="complaints.html" class="nav-item"><span class="nav-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></span><span class="nav-label">Complaints</span></a></li>
+                    <li><a href="maintenance.html" class="nav-item"><span class="nav-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 0 0 5.4-5.4l-3 3-3-3 3-3Z"></path></svg></span><span class="nav-label">Maintenance</span></a></li>
+                    <li><a href="payments.html" class="nav-item"><span class="nav-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M2 10h20"></path></svg></span><span class="nav-label">Payments</span></a></li>
+                    <li><a href="#" class="nav-item"><span class="nav-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3h6v6"></path><path d="m15 9 7-7"></path></svg></span><span class="nav-label">Admin / Users</span></a></li>
+                </ul>
+            </nav>
+
+            <a href="login.html" class="nav-item logout-item mt-4">
+                <span class="nav-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="m16 17 5-5-5-5"></path><path d="M21 12H9"></path></svg></span>
+                <span class="nav-label">Logout</span>
+            </a>
+        </aside>
+
+        <main id="mainContent" class="main-shell relative min-h-screen flex-1 px-4 pb-8 pt-6 transition-all duration-300 sm:px-6 lg:px-8">
+            <div class="page-enter mx-auto max-w-7xl">
+                <header class="mb-6 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+                    <div class="flex items-center gap-3">
+                        <button id="mobileMenuButton" class="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-slate-200 transition hover:border-cyan-400/30 hover:text-white focus:outline-none lg:hidden" aria-label="Open menu">
+                            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"></path><path d="M3 6h18"></path><path d="M3 18h18"></path></svg>
+                        </button>
+                        <div>
+                            <p class="text-sm font-medium uppercase tracking-[0.28em] text-cyan-200/75">Multi-Hostel Workspace</p>
+                            <h2 class="text-3xl font-bold tracking-tight text-white">Dashboard</h2>
+                        </div>
+                    </div>
+
+                    <div class="grid gap-3 sm:grid-cols-2 xl:flex xl:items-center">
+                        <label class="control-shell rounded-2xl border border-white/10 px-4 py-3 text-sm">
+                            <span class="mb-2 block text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Select Hostel</span>
+                            <select id="hostelSelector" class="w-full bg-transparent text-sm font-medium text-white focus:outline-none">
+                                <option value="hostelA">Hostel A</option>
+                                <option value="hostelB">Hostel B</option>
+                                <option value="hostelC">Hostel C</option>
+                            </select>
+                        </label>
+
+                        <label class="top-search flex items-center gap-3 rounded-2xl border border-white/10 px-4 py-3 text-sm text-slate-300">
+                            <svg class="h-5 w-5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="m21 21-4.3-4.3"></path></svg>
+                            <input type="text" placeholder="Search dashboard..." class="w-full bg-transparent text-sm text-white placeholder:text-slate-500 focus:outline-none sm:w-56">
+                        </label>
+
+                        <div class="flex items-center gap-3">
+                            <button class="glass-chip relative flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 text-slate-200 transition hover:border-cyan-400/30 hover:text-white focus:outline-none" aria-label="Notifications">
+                                <span class="notif-dot"></span>
+                                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 1 0-12 0v3.2a2 2 0 0 1-.6 1.4L4 17h5"></path><path d="M10 21a2 2 0 0 0 4 0"></path></svg>
+                            </button>
+
+                            <button class="profile-chip flex items-center gap-3 rounded-2xl border border-white/10 px-3 py-2 text-left transition hover:border-cyan-400/30 focus:outline-none">
+                                <span class="profile-avatar flex h-10 w-10 items-center justify-center rounded-xl text-sm font-semibold text-white">UA</span>
+                                <span class="hidden sm:block">
+                                    <span class="block text-sm font-semibold text-white">Umair Admin</span>
+                                    <span class="block text-xs text-slate-400">Super Admin</span>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </header>
+
+                <section class="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                    <article class="stat-card">
+                        <div class="stat-head">
+                            <span class="stat-icon cyan-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"></path><path d="M5 21V7l8-4 6 3v15"></path><path d="M9 9h.01"></path><path d="M9 13h.01"></path><path d="M9 17h.01"></path><path d="M15 13h.01"></path><path d="M15 17h.01"></path></svg></span>
+                            <span class="stat-trend">Global</span>
+                        </div>
+                        <p class="stat-label">Total Hostels</p>
+                        <h3 class="stat-value" data-stat="totalHostels">0</h3>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-head">
+                            <span class="stat-icon indigo-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 4l9 6.5"></path><path d="M5 9.5V20h14V9.5"></path></svg></span>
+                            <span class="stat-trend" id="roomsTrend">Live</span>
+                        </div>
+                        <p class="stat-label">Rooms</p>
+                        <h3 class="stat-value" data-stat="rooms">0</h3>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-head">
+                            <span class="stat-icon violet-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"></path><circle cx="9.5" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span>
+                            <span class="stat-trend" id="studentsTrend">Live</span>
+                        </div>
+                        <p class="stat-label">Students</p>
+                        <h3 class="stat-value" data-stat="students">0</h3>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-head">
+                            <span class="stat-icon emerald-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span>
+                            <span class="stat-trend" id="staffTrend">Live</span>
+                        </div>
+                        <p class="stat-label">Staff</p>
+                        <h3 class="stat-value" data-stat="staff">0</h3>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-head">
+                            <span class="stat-icon rose-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></span>
+                            <span class="stat-trend" id="complaintsTrend">Live</span>
+                        </div>
+                        <p class="stat-label">Total Complaints</p>
+                        <h3 class="stat-value" data-stat="complaints">0</h3>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-head">
+                            <span class="stat-icon amber-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg></span>
+                            <span class="stat-trend" id="pendingTrend">Action</span>
+                        </div>
+                        <p class="stat-label">Pending Complaints</p>
+                        <h3 class="stat-value" data-stat="pendingComplaints">0</h3>
+                    </article>
+                </section>
+
+                <section class="mb-6 grid gap-4 xl:grid-cols-[1.55fr_1fr]">
+                    <div class="grid gap-4 lg:grid-cols-2">
+                        <article class="panel-card">
+                            <div class="panel-header">
+                                <h3>Complaints Status</h3>
+                                <span id="complaintsChartLabel">Selected Hostel</span>
+                            </div>
+                            <div class="chart-wrap doughnut-wrap">
+                                <canvas id="complaintsChart"></canvas>
+                            </div>
+                        </article>
+
+                        <article class="panel-card">
+                            <div class="panel-header">
+                                <h3>Room Occupancy</h3>
+                                <span id="occupancyChartLabel">Selected Hostel</span>
+                            </div>
+                            <div class="chart-wrap">
+                                <canvas id="occupancyChart"></canvas>
+                            </div>
+                        </article>
+
+                        <article class="panel-card lg:col-span-2">
+                            <div class="panel-header">
+                                <h3>Monthly Activity</h3>
+                                <span id="activityChartLabel">Selected Hostel</span>
+                            </div>
+                            <div class="chart-wrap line-wrap">
+                                <canvas id="activityChart"></canvas>
+                            </div>
+                        </article>
+                    </div>
+
+                    <div class="grid gap-4">
+                        <article class="panel-card">
+                            <div class="panel-header">
+                                <h3>Quick Actions</h3>
+                                <span>Shortcuts</span>
+                            </div>
+                            <div class="grid gap-3">
+                                <button class="action-btn"><span class="action-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"></path><circle cx="9.5" cy="7" r="4"></circle><path d="M19 8h4"></path><path d="M21 6v4"></path></svg></span><span>Add Student</span></button>
+                                <button class="action-btn"><span class="action-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg></span><span>Add Room</span></button>
+                                <button class="action-btn"><span class="action-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><path d="M12 7v6"></path><path d="M12 17h.01"></path></svg></span><span>Add Complaint</span></button>
+                            </div>
+                        </article>
+
+                        <article class="panel-card">
+                            <div class="panel-header">
+                                <h3>Hostel Snapshot</h3>
+                                <span id="snapshotHostel">Hostel A</span>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="mini-row">
+                                    <div>
+                                        <p class="mini-title">Occupied Rooms</p>
+                                        <p class="mini-sub" id="occupiedSummary">0 rooms in use</p>
+                                    </div>
+                                    <span class="status-pill progress" id="occupancySummary">0%</span>
+                                </div>
+                                <div class="mini-row">
+                                    <div>
+                                        <p class="mini-title">Resolved Complaints</p>
+                                        <p class="mini-sub" id="resolvedSummary">0 completed items</p>
+                                    </div>
+                                    <span class="status-pill resolved" id="resolvedRate">0%</span>
+                                </div>
+                                <div class="mini-row">
+                                    <div>
+                                        <p class="mini-title">Wardens on Duty</p>
+                                        <p class="mini-sub" id="staffSummary">0 staff scheduled</p>
+                                    </div>
+                                    <span class="status-pill pending" id="staffStatus">Live</span>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </section>
             </div>
+        </main>
+    </div>
 
-            <div class="card">
-                <h3>Available Rooms</h3>
-                <p id="available">0</p>
-            </div>
-
-            <div class="card">
-                <h3>Complaints</h3>
-                <p id="complaints">0</p>
-            </div>
-
-        </div>
-
-        <div class="table-section">
-            <h2>Recent Complaints</h2>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Issue</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody id="tableData"></tbody>
-            </table>
-        </div>
-
-    </main>
-
-</div>
-
-<script src="../js/admin_js/dashboard.js"></script>
+    <script src="../js/admin_js/dashboard.js"></script>
 </body>
 </html>
