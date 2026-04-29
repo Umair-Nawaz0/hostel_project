@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+
+    <link rel="stylesheet" href="../css/admin_css/login.css">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="background">
+    <div class="shape"></div>
+    <div class="shape"></div>
+</div>
+
+<div class="container">
+
+    <div class="login-card">
+        <h2>Admin Login</h2>
+        <p class="subtitle">Welcome back 👋</p>
+
+        <form id="loginForm">
+
+            <div class="input-group">
+                <input type="email" id="email" required>
+                <label>Email Address</label>
+            </div>
+
+            <div class="input-group">
+                <input type="password" id="password" required>
+                <label>Password</label>
+            </div>
+
+            <button type="submit">Login</button>
+
+            <p class="error" id="errorMsg"></p>
+        </form>
+    </div>
+
+</div>
+
+<script src="../js/admin_js/login.js"></script>
+
+</body>
+</html>
