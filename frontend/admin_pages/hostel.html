@@ -3,181 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hostel Management</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Hostel Management | Hostel OS</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../css/admin_css/hostel.css">
 </head>
-<body class="min-h-screen bg-slate-950 text-white">
+<body class="min-h-screen overflow-x-hidden bg-slate-950 text-slate-100">
     <div class="page-bg"></div>
     <div class="page-noise"></div>
-    <div id="mobileOverlay" class="mobile-overlay"></div>
+    <div id="mobileOverlay" class="mobile-overlay lg:hidden"></div>
 
-    <div class="relative flex min-h-screen">
-        <aside id="sidebar" class="sidebar-shell fixed inset-y-0 left-0 z-40 flex w-72 flex-col border-r border-white/10 px-4 py-5 transition-all duration-300 lg:translate-x-0">
-            <div class="flex items-center justify-between px-2">
-                <div class="sidebar-brand flex items-center gap-3">
-                    <div class="flex h-12 w-12 items-center justify-center rounded-2xl border border-cyan-400/20 bg-cyan-400/10 text-cyan-200 shadow-[0_0_30px_rgba(34,211,238,0.18)]">
-                        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="M3 10.5 12 4l9 6.5"></path>
-                            <path d="M5 9.5V20h14V9.5"></path>
-                            <path d="M9.5 20v-5a2.5 2.5 0 0 1 5 0v5"></path>
-                        </svg>
-                    </div>
-                    <div class="sidebar-copy">
-                        <p class="text-sm font-medium uppercase tracking-[0.22em] text-cyan-200/80">Hostel OS</p>
-                        <h1 class="text-lg font-semibold text-white">Admin Panel</h1>
-                    </div>
-                </div>
-
-                <button id="sidebarToggle" class="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-slate-300 transition hover:border-cyan-400/30 hover:text-white focus:outline-none" aria-label="Toggle sidebar">
-                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <path d="M4 12h16"></path>
-                        <path d="M4 6h16"></path>
-                        <path d="M10 18h10"></path>
-                    </svg>
-                </button>
+    <aside class="sidebar-shell fixed left-0 top-0 z-40 h-screen p-5 lg:hidden">
+        <div class="sidebar-brand mb-8 flex items-center gap-3">
+            <span class="brand-mark">
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M3 10.5 12 3l9 7.5"></path>
+                    <path d="M5.25 9.75V21h13.5V9.75"></path>
+                </svg>
+            </span>
+            <div class="sidebar-copy">
+                <p class="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-200/80">Hostel OS</p>
+                <p class="text-xs text-slate-400">Admin Navigation</p>
             </div>
+        </div>
+        <nav class="space-y-2">
+            <a href="dashboard.html" class="nav-item"><span class="nav-icon">🏠</span><span class="nav-label">Dashboard</span></a>
+            <a href="hostel.html" class="nav-item active"><span class="nav-icon">🏢</span><span class="nav-label">Hostels</span></a>
+            <a href="rooms.html" class="nav-item"><span class="nav-icon">🛏️</span><span class="nav-label">Rooms</span></a>
+            <a href="students.html" class="nav-item"><span class="nav-icon">🎓</span><span class="nav-label">Students</span></a>
+            <a href="staff.html" class="nav-item"><span class="nav-icon">🧑‍💼</span><span class="nav-label">Staff</span></a>
+            <a href="complaints.html" class="nav-item"><span class="nav-icon">📣</span><span class="nav-label">Complaints</span></a>
+            <a href="maintenance.html" class="nav-item"><span class="nav-icon">🛠️</span><span class="nav-label">Maintenance</span></a>
+            <a href="payments.html" class="nav-item"><span class="nav-icon">💳</span><span class="nav-label">Payments</span></a>
+        </nav>
+        <a href="login.html" class="nav-item logout-item mt-8"><span class="nav-icon">↩</span><span class="nav-label">Logout</span></a>
+    </aside>
 
-            <nav class="mt-8 flex-1 overflow-y-auto">
-                <ul class="space-y-2">
-                    <li><a href="dashboard.html" class="nav-item"><span class="nav-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h8V3H3z"></path><path d="M13 21h8V11h-8z"></path><path d="M13 3h8v4h-8z"></path><path d="M3 21h8v-4H3z"></path></svg></span><span class="nav-label">Dashboard</span></a></li>
-                    <li><a href="hostel.html" class="nav-item active"><span class="nav-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"></path><path d="M5 21V7l8-4 6 3v15"></path><path d="M9 9h.01"></path><path d="M9 13h.01"></path><path d="M9 17h.01"></path><path d="M15 13h.01"></path><path d="M15 17h.01"></path></svg></span><span class="nav-label">Hostels</span></a></li>
-                    <li><a href="rooms.html" class="nav-item"><span class="nav-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 4l9 6.5"></path><path d="M5 9.5V20h14V9.5"></path></svg></span><span class="nav-label">Rooms</span></a></li>
-                    <li><a href="students.html" class="nav-item"><span class="nav-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"></path><circle cx="9.5" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span><span class="nav-label">Students</span></a></li>
-                    <li><a href="staff.html" class="nav-item"><span class="nav-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span><span class="nav-label">Staff / Wardens</span></a></li>
-                    <li><a href="complaints.html" class="nav-item"><span class="nav-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></span><span class="nav-label">Complaints</span></a></li>
-                    <li><a href="maintenance.html" class="nav-item"><span class="nav-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 0 0 5.4-5.4l-3 3-3-3 3-3Z"></path></svg></span><span class="nav-label">Maintenance</span></a></li>
-                    <li><a href="payments.html" class="nav-item"><span class="nav-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M2 10h20"></path></svg></span><span class="nav-label">Payments</span></a></li>
-                    <li><a href="#" class="nav-item"><span class="nav-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3h6v6"></path><path d="m15 9 7-7"></path></svg></span><span class="nav-label">Admin / Users</span></a></li>
-                </ul>
+    <main class="main-shell relative z-10 min-h-screen px-4 py-4 sm:px-6 lg:px-8">
+        <header class="nav-shell sticky top-4 z-20 mb-6 flex items-center justify-between gap-4 px-4 py-4 sm:px-6">
+            <div class="flex items-center gap-3">
+                <button id="mobileMenuButton" type="button" class="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-slate-100 transition hover:bg-white/10 lg:hidden">☰</button>
+                <a href="dashboard.html" class="brand-link"><span class="brand-mark"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5.25 9.75V21h13.5V9.75"></path></svg></span><span class="brand-copy">Hostel OS</span></a>
+            </div>
+            <nav class="desktop-nav hidden lg:flex">
+                <a href="dashboard.html" class="desktop-nav-link">Dashboard</a>
+                <a href="hostel.html" class="desktop-nav-link active">Hostels</a>
+                <a href="rooms.html" class="desktop-nav-link">Rooms</a>
+                <a href="students.html" class="desktop-nav-link">Students</a>
+                <a href="staff.html" class="desktop-nav-link">Staff</a>
+                <a href="complaints.html" class="desktop-nav-link">Complaints</a>
+                <a href="maintenance.html" class="desktop-nav-link">Maintenance</a>
+                <a href="payments.html" class="desktop-nav-link">Payments</a>
             </nav>
-
-            <a href="login.html" class="nav-item logout-item mt-4">
-                <span class="nav-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="m16 17 5-5-5-5"></path><path d="M21 12H9"></path></svg></span>
-                <span class="nav-label">Logout</span>
-            </a>
-        </aside>
-
-        <main class="main-shell relative min-h-screen flex-1 px-4 pb-8 pt-6 transition-all duration-300 sm:px-6 lg:px-8">
-            <div class="page-enter mx-auto max-w-7xl">
-                <header class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                    <div class="flex items-center gap-3">
-                        <button id="mobileMenuButton" class="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-slate-200 transition hover:border-cyan-400/30 hover:text-white focus:outline-none lg:hidden" aria-label="Open menu">
-                            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"></path><path d="M3 6h18"></path><path d="M3 18h18"></path></svg>
-                        </button>
-                        <div>
-                            <p class="text-sm font-medium uppercase tracking-[0.28em] text-cyan-200/75">Admin Workspace</p>
-                            <h2 class="text-3xl font-bold tracking-tight text-white">Hostel Management</h2>
-                        </div>
-                    </div>
-
-                    <button id="openAddHostel" class="add-btn inline-flex items-center justify-center gap-3 rounded-2xl px-5 py-3 text-sm font-semibold text-white transition focus:outline-none">
-                        <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-white/10">
-                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
-                        </span>
-                        <span>+ Add Hostel</span>
-                    </button>
-                </header>
-
-                <section class="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                    <article class="summary-card">
-                        <p class="summary-label">Total Hostels</p>
-                        <p id="totalHostels" class="summary-value">0</p>
-                    </article>
-                    <article class="summary-card">
-                        <p class="summary-label">Combined Capacity</p>
-                        <p id="totalCapacity" class="summary-value">0</p>
-                    </article>
-                    <article class="summary-card">
-                        <p class="summary-label">Total Rooms</p>
-                        <p id="totalRooms" class="summary-value">0</p>
-                    </article>
-                    <article class="summary-card">
-                        <p class="summary-label">Occupied Rooms</p>
-                        <p id="occupiedRooms" class="summary-value">0</p>
-                    </article>
-                </section>
-
-                <section id="hostelGrid" class="grid gap-5 sm:grid-cols-2 xl:grid-cols-3"></section>
+            <div class="flex items-center gap-3">
+                <div class="header-avatar hidden sm:flex">AD</div>
+                <a href="login.html" class="header-action inline-flex">Logout</a>
             </div>
-        </main>
-    </div>
+        </header>
 
-    <div id="hostelModal" class="modal-backdrop hidden">
-        <div class="modal-panel w-full max-w-2xl">
-            <div class="mb-6 flex items-start justify-between gap-4">
-                <div>
-                    <p class="text-sm font-medium uppercase tracking-[0.25em] text-cyan-200/75">Hostel Form</p>
-                    <h3 id="modalTitle" class="mt-2 text-2xl font-bold text-white">Add Hostel</h3>
-                </div>
-                <button type="button" data-close-modal class="rounded-xl border border-white/10 bg-white/5 p-2 text-slate-300 transition hover:text-white focus:outline-none" aria-label="Close">
-                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 6 12 12"></path><path d="M18 6 6 18"></path></svg>
-                </button>
+        <section class="topbar-shell page-enter mb-6 flex flex-col gap-4 px-4 py-5 sm:px-6 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+                <p class="text-sm uppercase tracking-[0.35em] text-cyan-200/70">Administration</p>
+                <h1 class="mt-2 text-2xl font-semibold text-white sm:text-3xl">Hostel Management</h1>
             </div>
+            <button id="openAddHostel" type="button" class="add-btn inline-flex items-center justify-center rounded-2xl px-5 py-3 text-sm font-semibold text-white">
+                + Add Hostel
+            </button>
+        </section>
 
+        <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <article class="summary-card p-5"><p class="summary-label">Total Hostels</p><p id="totalHostels" class="summary-value">0</p></article>
+            <article class="summary-card p-5"><p class="summary-label">Total Capacity</p><p id="totalCapacity" class="summary-value">0</p></article>
+            <article class="summary-card p-5"><p class="summary-label">Total Rooms</p><p id="totalRooms" class="summary-value">0</p></article>
+            <article class="summary-card p-5"><p class="summary-label">Occupied Rooms</p><p id="occupiedRooms" class="summary-value">0</p></article>
+        </section>
+
+        <section id="hostelGrid" class="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3"></section>
+    </main>
+
+    <div id="hostelModal" class="modal-backdrop hidden z-50 flex items-center justify-center p-4">
+        <div class="modal-panel w-full max-w-2xl p-6">
+            <div class="mb-5 flex items-center justify-between gap-4">
+                <h2 id="modalTitle" class="text-xl font-semibold text-white">Add Hostel</h2>
+                <button type="button" data-close-modal class="text-2xl text-slate-400">×</button>
+            </div>
+            <p id="formError" class="mb-4 hidden rounded-2xl border border-rose-400/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-200"></p>
             <form id="hostelForm" class="grid gap-4 sm:grid-cols-2">
-                <div class="sm:col-span-2">
-                    <label for="hostelName" class="form-label">Hostel Name</label>
-                    <input id="hostelName" name="hostelName" type="text" class="form-input">
-                </div>
-                <div>
-                    <label for="hostelLocation" class="form-label">Location / City</label>
-                    <input id="hostelLocation" name="hostelLocation" type="text" class="form-input">
-                </div>
-                <div>
-                    <label for="wardenName" class="form-label">Warden Name</label>
-                    <input id="wardenName" name="wardenName" type="text" class="form-input">
-                </div>
-                <div class="sm:col-span-2">
-                    <label for="hostelAddress" class="form-label">Full Address</label>
-                    <textarea id="hostelAddress" name="hostelAddress" rows="3" class="form-input resize-none"></textarea>
-                </div>
-                <div>
-                    <label for="hostelCapacity" class="form-label">Capacity</label>
-                    <input id="hostelCapacity" name="hostelCapacity" type="number" min="1" class="form-input">
-                </div>
-                <div>
-                    <label for="hostelRooms" class="form-label">Total Rooms</label>
-                    <input id="hostelRooms" name="hostelRooms" type="number" min="1" class="form-input">
-                </div>
-                <p id="formError" class="sm:col-span-2 min-h-[1.25rem] text-sm font-medium text-rose-300"></p>
-                <div class="sm:col-span-2 flex justify-end gap-3">
-                    <button type="button" data-close-modal class="rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-slate-200 transition hover:border-white/20 hover:text-white">Cancel</button>
+                <div><label class="form-label" for="hostelName">Hostel Name</label><input id="hostelName" class="form-input mt-2 w-full" type="text"></div>
+                <div><label class="form-label" for="hostelLocation">Location / City</label><input id="hostelLocation" class="form-input mt-2 w-full" type="text"></div>
+                <div class="sm:col-span-2"><label class="form-label" for="hostelAddress">Full Address</label><textarea id="hostelAddress" class="form-input mt-2 min-h-[120px] w-full"></textarea></div>
+                <div><label class="form-label" for="hostelCapacity">Capacity</label><input id="hostelCapacity" class="form-input mt-2 w-full" type="number" min="1"></div>
+                <div><label class="form-label" for="hostelRooms">Total Rooms</label><input id="hostelRooms" class="form-input mt-2 w-full" type="number" min="1"></div>
+                <div class="sm:col-span-2"><label class="form-label" for="wardenName">Warden Name</label><input id="wardenName" class="form-input mt-2 w-full" type="text"></div>
+                <div class="sm:col-span-2 flex justify-end gap-3 pt-2">
+                    <button type="button" data-close-modal class="rounded-2xl border border-white/10 px-5 py-3 text-sm text-slate-200">Cancel</button>
                     <button type="submit" class="add-btn rounded-2xl px-5 py-3 text-sm font-semibold text-white">Save</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <div id="detailsModal" class="modal-backdrop hidden">
-        <div class="modal-panel w-full max-w-xl">
-            <div class="mb-6 flex items-start justify-between gap-4">
-                <div>
-                    <p class="text-sm font-medium uppercase tracking-[0.25em] text-cyan-200/75">Hostel Details</p>
-                    <h3 id="detailsTitle" class="mt-2 text-2xl font-bold text-white">Hostel</h3>
-                </div>
-                <button type="button" data-close-details class="rounded-xl border border-white/10 bg-white/5 p-2 text-slate-300 transition hover:text-white focus:outline-none" aria-label="Close">
-                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 6 12 12"></path><path d="M18 6 6 18"></path></svg>
-                </button>
+    <div id="detailsModal" class="modal-backdrop hidden z-50 flex items-center justify-center p-4">
+        <div class="modal-panel w-full max-w-2xl p-6">
+            <div class="mb-5 flex items-center justify-between gap-4">
+                <h2 id="detailsTitle" class="text-xl font-semibold text-white">Hostel Details</h2>
+                <button type="button" data-close-details class="text-2xl text-slate-400">×</button>
             </div>
-
-            <div id="detailsContent" class="grid gap-3 sm:grid-cols-2"></div>
+            <div id="detailsContent" class="space-y-4"></div>
         </div>
     </div>
 
-    <div id="confirmModal" class="modal-backdrop hidden">
-        <div class="modal-panel w-full max-w-md">
-            <div class="mb-5">
-                <p class="text-sm font-medium uppercase tracking-[0.25em] text-rose-200/75">Confirm Delete</p>
-                <h3 class="mt-2 text-2xl font-bold text-white">Delete hostel?</h3>
-                <p id="confirmText" class="mt-3 text-sm text-slate-300">This action will remove the hostel from the list.</p>
-            </div>
-
-            <div class="flex justify-end gap-3">
-                <button type="button" data-close-confirm class="rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-slate-200 transition hover:border-white/20 hover:text-white">Cancel</button>
+    <div id="confirmModal" class="modal-backdrop hidden z-50 flex items-center justify-center p-4">
+        <div class="modal-panel w-full max-w-md p-6 text-center">
+            <h2 class="text-xl font-semibold text-white">Delete Hostel</h2>
+            <p id="confirmText" class="mt-3 text-sm text-slate-300"></p>
+            <div class="mt-6 flex justify-center gap-3">
+                <button type="button" data-close-confirm class="rounded-2xl border border-white/10 px-5 py-3 text-sm text-slate-200">Cancel</button>
                 <button id="confirmDelete" type="button" class="delete-btn rounded-2xl px-5 py-3 text-sm font-semibold text-white">Delete</button>
             </div>
         </div>

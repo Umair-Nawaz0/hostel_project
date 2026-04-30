@@ -1,5 +1,4 @@
 const body = document.body;
-const sidebarToggle = document.getElementById("sidebarToggle");
 const mobileMenuButton = document.getElementById("mobileMenuButton");
 const mobileOverlay = document.getElementById("mobileOverlay");
 
@@ -69,10 +68,6 @@ let complaints = [
 let selectedHostelId = hostels[0].id;
 let selectedStatus = "All";
 
-function isDesktop() {
-    return window.innerWidth >= 1024;
-}
-
 function openMobileSidebar() {
     body.classList.add("sidebar-open");
     mobileOverlay.classList.add("active");
@@ -83,12 +78,7 @@ function closeMobileSidebar() {
     mobileOverlay.classList.remove("active");
 }
 
-function handleSidebarToggle() {
-    if (isDesktop()) {
-        body.classList.toggle("sidebar-collapsed");
-        return;
-    }
-
+function toggleSidebar() {
     if (body.classList.contains("sidebar-open")) {
         closeMobileSidebar();
     } else {
@@ -97,11 +87,7 @@ function handleSidebarToggle() {
 }
 
 function handleResize() {
-    if (isDesktop()) {
-        closeMobileSidebar();
-    } else {
-        body.classList.remove("sidebar-collapsed");
-    }
+    closeMobileSidebar();
 }
 
 function populateHostelOptions() {
@@ -230,8 +216,7 @@ complaintsTable.addEventListener("click", (event) => {
     openDetailsModal(complaint);
 });
 
-sidebarToggle.addEventListener("click", handleSidebarToggle);
-mobileMenuButton.addEventListener("click", openMobileSidebar);
+mobileMenuButton.addEventListener("click", toggleSidebar);
 mobileOverlay.addEventListener("click", closeMobileSidebar);
 window.addEventListener("resize", handleResize);
 
