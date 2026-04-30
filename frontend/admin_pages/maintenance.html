@@ -1,94 +1,221 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maintenance</title>
-
-<link rel="stylesheet" href="../css/admin_css/maintenance.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maintenance Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/admin_css/maintenance.css">
 </head>
+<body class="min-h-screen bg-slate-950 text-white">
+    <div class="page-bg"></div>
+    <div class="page-noise"></div>
+    <div id="mobileOverlay" class="mobile-overlay"></div>
 
-<body>
+    <div class="relative flex min-h-screen">
+        <aside id="sidebar" class="sidebar-shell fixed inset-y-0 left-0 z-40 flex w-72 flex-col border-r border-white/10 px-4 py-5 transition-all duration-300 lg:translate-x-0">
+            <div class="flex items-center justify-between px-2">
+                <div class="sidebar-brand flex items-center gap-3">
+                    <div class="flex h-12 w-12 items-center justify-center rounded-2xl border border-cyan-400/20 bg-cyan-400/10 text-cyan-200 shadow-[0_0_30px_rgba(34,211,238,0.18)]">
+                        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M3 10.5 12 4l9 6.5"></path>
+                            <path d="M5 9.5V20h14V9.5"></path>
+                            <path d="M9.5 20v-5a2.5 2.5 0 0 1 5 0v5"></path>
+                        </svg>
+                    </div>
+                    <div class="sidebar-copy">
+                        <p class="text-sm font-medium uppercase tracking-[0.22em] text-cyan-200/80">Hostel OS</p>
+                        <h1 class="text-lg font-semibold text-white">Admin Panel</h1>
+                    </div>
+                </div>
 
-<div class="hamburger" id="hamburger">☰</div>
-<div class="overlay" id="overlay"></div>
+                <button id="sidebarToggle" class="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-slate-300 transition hover:border-cyan-400/30 hover:text-white focus:outline-none" aria-label="Toggle sidebar">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M4 12h16"></path>
+                        <path d="M4 6h16"></path>
+                        <path d="M10 18h10"></path>
+                    </svg>
+                </button>
+            </div>
 
-<div class="dashboard">
+            <nav class="mt-8 flex-1 overflow-y-auto">
+                <ul class="space-y-2">
+                    <li><a href="dashboard.html" class="nav-item"><span class="nav-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h8V3H3z"></path><path d="M13 21h8V11h-8z"></path><path d="M13 3h8v4h-8z"></path><path d="M3 21h8v-4H3z"></path></svg></span><span class="nav-label">Dashboard</span></a></li>
+                    <li><a href="hostel.html" class="nav-item"><span class="nav-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"></path><path d="M5 21V7l8-4 6 3v15"></path><path d="M9 9h.01"></path><path d="M9 13h.01"></path><path d="M9 17h.01"></path><path d="M15 13h.01"></path><path d="M15 17h.01"></path></svg></span><span class="nav-label">Hostels</span></a></li>
+                    <li><a href="rooms.html" class="nav-item"><span class="nav-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 4l9 6.5"></path><path d="M5 9.5V20h14V9.5"></path></svg></span><span class="nav-label">Rooms</span></a></li>
+                    <li><a href="students.html" class="nav-item"><span class="nav-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"></path><circle cx="9.5" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span><span class="nav-label">Students</span></a></li>
+                    <li><a href="staff.html" class="nav-item"><span class="nav-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span><span class="nav-label">Staff / Wardens</span></a></li>
+                    <li><a href="complaints.html" class="nav-item"><span class="nav-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></span><span class="nav-label">Complaints</span></a></li>
+                    <li><a href="maintenance.html" class="nav-item active"><span class="nav-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 0 0 5.4-5.4l-3 3-3-3 3-3Z"></path></svg></span><span class="nav-label">Maintenance</span></a></li>
+                    <li><a href="payments.html" class="nav-item"><span class="nav-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M2 10h20"></path></svg></span><span class="nav-label">Payments</span></a></li>
+                    <li><a href="#" class="nav-item"><span class="nav-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h6v6"></path><path d="m15 9 7-7"></path><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path></svg></span><span class="nav-label">Admin / Users</span></a></li>
+                </ul>
+            </nav>
 
-<aside class="sidebar" id="sidebar">
-    <h2>Hostel Admin</h2>
+            <a href="login.html" class="nav-item logout-item mt-4">
+                <span class="nav-icon"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="m16 17 5-5-5-5"></path><path d="M21 12H9"></path></svg></span>
+                <span class="nav-label">Logout</span>
+            </a>
+        </aside>
 
-    <ul class="menu">
-        <li><a href="dashboard.html">Dashboard</a></li>
-        <li><a href="students.html">Students</a></li>
-        <li><a href="rooms.html">Rooms</a></li>
-        <li><a href="allocations.html">Allocations</a></li>
-        <li><a href="payments.html">Payments</a></li>
-        <li><a href="complaints.html">Complaints</a></li>
-        <li><a href="staff.html">Staff</a></li>
+        <main class="main-shell relative min-h-screen flex-1 px-4 pb-8 pt-6 transition-all duration-300 sm:px-6 lg:px-8">
+            <div class="page-enter mx-auto max-w-7xl">
+                <header class="mb-6 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+                    <div class="flex items-center gap-3">
+                        <button id="mobileMenuButton" class="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-slate-200 transition hover:border-cyan-400/30 hover:text-white focus:outline-none lg:hidden" aria-label="Open menu">
+                            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"></path><path d="M3 6h18"></path><path d="M3 18h18"></path></svg>
+                        </button>
+                        <div>
+                            <p class="text-sm font-medium uppercase tracking-[0.28em] text-cyan-200/75">Admin Workspace</p>
+                            <h2 class="text-3xl font-bold tracking-tight text-white">Maintenance Management</h2>
+                        </div>
+                    </div>
 
-        <li class="active"><a href="maintenance.html">Maintenance</a></li>
-        <li><a href="inventory.html">Inventory</a></li>
-        <li><a href="meals.html">Meals</a></li>
-        <li><a href="visitors.html">Visitors</a></li>
+                    <div class="grid w-full gap-3 sm:grid-cols-2 xl:flex xl:w-auto xl:items-center">
+                        <label class="control-shell w-full rounded-2xl border border-white/10 px-4 py-3 text-sm xl:min-w-[190px]">
+                            <span class="mb-2 block text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Select Hostel</span>
+                            <select id="hostelFilter" class="w-full bg-transparent text-sm font-medium text-white focus:outline-none"></select>
+                        </label>
 
-        <li><a href="login.html">Logout</a></li>
-    </ul>
-</aside>
+                        <label class="control-shell w-full rounded-2xl border border-white/10 px-4 py-3 text-sm xl:min-w-[190px]">
+                            <span class="mb-2 block text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Status Filter</span>
+                            <select id="statusFilter" class="w-full bg-transparent text-sm font-medium text-white focus:outline-none">
+                                <option value="All">All</option>
+                                <option value="Assigned">Assigned</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </label>
 
-<main class="main">
+                        <label class="control-shell w-full rounded-2xl border border-white/10 px-4 py-3 text-sm xl:min-w-[260px]">
+                            <span class="mb-2 block text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Search</span>
+                            <input id="searchInput" type="text" placeholder="Search maintenance or complaint..." class="w-full bg-transparent text-sm font-medium text-white placeholder:text-slate-500 focus:outline-none">
+                        </label>
 
-<div class="topbar">
-    <h1>Maintenance Requests</h1>
-    <button id="openModal">+ Add Request</button>
-</div>
+                        <button id="openMaintenanceModal" type="button" class="primary-btn w-full xl:w-auto">
+                            <span>+ Assign Maintenance</span>
+                        </button>
+                    </div>
+                </header>
 
-<div class="search-box">
-    <input id="search" placeholder="Search maintenance...">
-</div>
+                <section class="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                    <article class="summary-card">
+                        <p class="summary-label">Filtered Records</p>
+                        <p id="filteredCount" class="summary-value">0</p>
+                    </article>
+                    <article class="summary-card">
+                        <p class="summary-label">In Progress</p>
+                        <p id="inProgressCount" class="summary-value">0</p>
+                    </article>
+                    <article class="summary-card">
+                        <p class="summary-label">Completed</p>
+                        <p id="completedCount" class="summary-value">0</p>
+                    </article>
+                    <article class="summary-card">
+                        <p class="summary-label">Selected Hostel</p>
+                        <p id="selectedHostelName" class="summary-value text-base sm:text-lg">All Hostels</p>
+                    </article>
+                </section>
 
-<div class="table-section">
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Room</th>
-<th>Issue</th>
-<th>Date</th>
-<th>Status</th>
-<th>Actions</th>
-</tr>
-</thead>
-<tbody id="table"></tbody>
-</table>
-</div>
+                <section class="table-shell overflow-hidden rounded-3xl">
+                    <div class="table-wrap overflow-x-auto">
+                        <table class="min-w-full">
+                            <thead>
+                                <tr>
+                                    <th>Maintenance ID</th>
+                                    <th>Complaint ID</th>
+                                    <th>Student Name</th>
+                                    <th>Hostel</th>
+                                    <th>Assigned Staff</th>
+                                    <th>Assigned Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="maintenanceTable"></tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
 
-</main>
-</div>
+    <div id="detailsModal" class="modal-backdrop hidden">
+        <div class="modal-panel w-full max-w-3xl">
+            <div class="mb-6 flex items-start justify-between gap-4">
+                <div>
+                    <p class="text-sm font-medium uppercase tracking-[0.25em] text-cyan-200/75">Maintenance Details</p>
+                    <h3 id="detailsTitle" class="mt-2 text-2xl font-bold text-white">Record</h3>
+                </div>
+                <button type="button" data-close-details class="rounded-xl border border-white/10 bg-white/5 p-2 text-slate-300 transition hover:text-white focus:outline-none" aria-label="Close">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 6 12 12"></path><path d="M18 6 6 18"></path></svg>
+                </button>
+            </div>
 
-<!-- Modal -->
-<div class="modal" id="modal">
-<div class="modal-box">
+            <div id="detailsContent" class="grid gap-3 sm:grid-cols-2"></div>
+        </div>
+    </div>
 
-<h2>Add Maintenance</h2>
+    <div id="maintenanceModal" class="modal-backdrop hidden">
+        <div class="modal-panel w-full max-w-3xl">
+            <div class="mb-6 flex items-start justify-between gap-4">
+                <div>
+                    <p class="text-sm font-medium uppercase tracking-[0.25em] text-cyan-200/75">Maintenance Form</p>
+                    <h3 id="modalTitle" class="mt-2 text-2xl font-bold text-white">Assign Maintenance</h3>
+                </div>
+                <button type="button" data-close-form class="rounded-xl border border-white/10 bg-white/5 p-2 text-slate-300 transition hover:text-white focus:outline-none" aria-label="Close">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 6 12 12"></path><path d="M18 6 6 18"></path></svg>
+                </button>
+            </div>
 
-<input id="room" placeholder="Room Number">
-<textarea id="issue" placeholder="Describe issue..." rows="3"></textarea>
+            <form id="maintenanceForm" class="grid gap-4 sm:grid-cols-2">
+                <label class="field-shell sm:col-span-2">
+                    <span class="field-label">Complaint</span>
+                    <select id="complaintSelect" class="field-input"></select>
+                </label>
 
-<select id="status">
-<option value="Pending">Pending</option>
-<option value="Completed">Completed</option>
-</select>
+                <label class="field-shell">
+                    <span class="field-label">Assigned Staff</span>
+                    <select id="staffSelect" class="field-input"></select>
+                </label>
 
-<div class="modal-actions">
-<button id="save">Save</button>
-<button id="close">Cancel</button>
-</div>
+                <label class="field-shell">
+                    <span class="field-label">Assigned Date</span>
+                    <input id="assignedDate" type="date" class="field-input">
+                </label>
 
-</div>
-</div>
+                <label class="field-shell">
+                    <span class="field-label">Status</span>
+                    <select id="maintenanceStatus" class="field-input">
+                        <option value="Assigned">Assigned</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </label>
 
-<script src="../js/admin_js/maintenance.js"></script>
+                <label id="completedDateField" class="field-shell hidden">
+                    <span class="field-label">Completed Date</span>
+                    <input id="completedDate" type="date" class="field-input">
+                </label>
+
+                <label class="field-shell sm:col-span-2">
+                    <span class="field-label">Remarks</span>
+                    <textarea id="remarks" rows="4" class="field-input resize-none" placeholder="Add assignment or completion remarks"></textarea>
+                </label>
+
+                <p id="formError" class="sm:col-span-2 hidden rounded-2xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-200"></p>
+
+                <div class="sm:col-span-2 flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
+                    <button type="button" data-close-form class="secondary-btn w-full sm:w-auto">Cancel</button>
+                    <button type="submit" class="primary-btn w-full sm:w-auto">Save Maintenance</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/admin_js/maintenance.js"></script>
 </body>
 </html>
