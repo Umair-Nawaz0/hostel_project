@@ -1,54 +1,13 @@
+const API_URL = "http://localhost:5000/api/dashboard";
+
 const body = document.body;
 const mobileMenuButton = document.getElementById("mobileMenuButton");
 const mobileOverlay = document.getElementById("mobileOverlay");
 const hostelSelector = document.getElementById("hostelSelector");
 const statValues = document.querySelectorAll("[data-stat]");
 
-const hostelData = {
-    hostelA: {
-        name: "Hostel A",
-        rooms: 48,
-        students: 116,
-        staff: 14,
-        complaints: 26,
-        pendingComplaints: 8,
-        resolvedComplaints: 18,
-        occupiedRooms: 41,
-        availableRooms: 7,
-        monthlyActivity: [22, 34, 29, 41, 38, 46]
-    },
-    hostelB: {
-        name: "Hostel B",
-        rooms: 64,
-        students: 152,
-        staff: 19,
-        complaints: 33,
-        pendingComplaints: 11,
-        resolvedComplaints: 22,
-        occupiedRooms: 57,
-        availableRooms: 7,
-        monthlyActivity: [31, 36, 40, 52, 49, 58]
-    },
-    hostelC: {
-        name: "Hostel C",
-        rooms: 36,
-        students: 84,
-        staff: 10,
-        complaints: 14,
-        pendingComplaints: 4,
-        resolvedComplaints: 10,
-        occupiedRooms: 29,
-        availableRooms: 7,
-        monthlyActivity: [14, 20, 18, 26, 24, 31]
-    }
-};
-
-const globalStats = {
-    totalHostels: Object.keys(hostelData).length
-};
-
 const chartLabelEls = {
-    complaints: document.getElementById("complaintsChartLabel"),
+    capacity: document.getElementById("capacityChartLabel"),
     occupancy: document.getElementById("occupancyChartLabel"),
     activity: document.getElementById("activityChartLabel"),
     snapshot: document.getElementById("snapshotHostel")
@@ -56,11 +15,27 @@ const chartLabelEls = {
 
 const summaryEls = {
     occupiedSummary: document.getElementById("occupiedSummary"),
-    occupancySummary: document.getElementById("occupancySummary"),
-    resolvedSummary: document.getElementById("resolvedSummary"),
-    resolvedRate: document.getElementById("resolvedRate"),
+    availableSummary: document.getElementById("availableSummary"),
+    allocationIntensity: document.getElementById("allocationIntensity"),
+    allocationSummary: document.getElementById("allocationSummary"),
+    studentsPerRoom: document.getElementById("studentsPerRoom"),
     staffSummary: document.getElementById("staffSummary"),
     staffStatus: document.getElementById("staffStatus")
+};
+
+const trendEls = {
+    roomsTrend: document.getElementById("roomsTrend"),
+    studentsTrend: document.getElementById("studentsTrend"),
+    staffTrend: document.getElementById("staffTrend"),
+    allocationsTrend: document.getElementById("allocationsTrend"),
+    availabilityTrend: document.getElementById("availabilityTrend")
+};
+
+let dashboardData = {
+    overview: null,
+    hostels: [],
+    monthLabels: [],
+    selectedHostel: null
 };
 
 function openMobileSidebar() {
@@ -112,13 +87,13 @@ Chart.defaults.color = "#94a3b8";
 Chart.defaults.borderColor = "rgba(148, 163, 184, 0.12)";
 Chart.defaults.font.family = "Space Grotesk, sans-serif";
 
-const complaintsChart = new Chart(document.getElementById("complaintsChart"), {
+const capacityChart = new Chart(document.getElementById("capacityChart"), {
     type: "doughnut",
     data: {
-        labels: ["Pending", "Resolved"],
+        labels: ["Occupied Rooms", "Available Rooms"],
         datasets: [{
             data: [0, 0],
-            backgroundColor: ["#f59e0b", "#22c55e"],
+            backgroundColor: ["#06b6d4", "#8b5cf6"],
             borderWidth: 0,
             hoverOffset: 6
         }]
@@ -146,10 +121,10 @@ const complaintsChart = new Chart(document.getElementById("complaintsChart"), {
 const occupancyChart = new Chart(document.getElementById("occupancyChart"), {
     type: "bar",
     data: {
-        labels: ["Occupied", "Available"],
+        labels: ["Students", "Staff"],
         datasets: [{
             data: [0, 0],
-            backgroundColor: ["#38bdf8", "#8b5cf6"],
+            backgroundColor: ["#38bdf8", "#22c55e"],
             borderRadius: 14,
             borderSkipped: false,
             maxBarThickness: 42
@@ -185,10 +160,10 @@ const occupancyChart = new Chart(document.getElementById("occupancyChart"), {
 const activityChart = new Chart(document.getElementById("activityChart"), {
     type: "line",
     data: {
-        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+        labels: [],
         datasets: [{
             label: "Monthly Activity",
-            data: [0, 0, 0, 0, 0, 0],
+            data: [],
             borderColor: "#22d3ee",
             backgroundColor: "rgba(34, 211, 238, 0.14)",
             fill: true,
@@ -215,7 +190,7 @@ const activityChart = new Chart(document.getElementById("activityChart"), {
             y: {
                 beginAtZero: true,
                 ticks: {
-                    stepSize: 10
+                    stepSize: 1
                 }
             }
         },
@@ -225,72 +200,169 @@ const activityChart = new Chart(document.getElementById("activityChart"), {
     }
 });
 
-function updateTrends(data) {
-    document.getElementById("roomsTrend").textContent = `${data.occupiedRooms}/${data.rooms}`;
-    document.getElementById("studentsTrend").textContent = `${Math.round((data.students / data.rooms) * 10) / 10} / room`;
-    document.getElementById("staffTrend").textContent = `${data.staff} active`;
-    document.getElementById("complaintsTrend").textContent = `${data.resolvedComplaints} resolved`;
-    document.getElementById("pendingTrend").textContent = `${data.pendingComplaints} open`;
+function setStatusState(message) {
+    trendEls.roomsTrend.textContent = message;
+    trendEls.studentsTrend.textContent = message;
+    trendEls.staffTrend.textContent = message;
+    trendEls.allocationsTrend.textContent = message;
+    trendEls.availabilityTrend.textContent = message;
+    summaryEls.occupiedSummary.textContent = message;
+    summaryEls.availableSummary.textContent = message;
+    summaryEls.allocationIntensity.textContent = message;
+    summaryEls.allocationSummary.textContent = message;
+    summaryEls.studentsPerRoom.textContent = message;
+    summaryEls.staffSummary.textContent = message;
+    summaryEls.staffStatus.textContent = message;
+    chartLabelEls.capacity.textContent = message;
+    chartLabelEls.occupancy.textContent = message;
+    chartLabelEls.activity.textContent = message;
+    chartLabelEls.snapshot.textContent = message;
 }
 
-function updateSummaries(data) {
-    const occupancyPercent = Math.round((data.occupiedRooms / data.rooms) * 100);
-    const resolvedPercent = Math.round((data.resolvedComplaints / data.complaints) * 100);
+async function fetchDashboardData(hostelId = "") {
+    const requestUrl = hostelId ? `${API_URL}?hostelId=${encodeURIComponent(hostelId)}` : API_URL;
+    const response = await fetch(requestUrl);
+    const payload = await response.json();
 
-    summaryEls.occupiedSummary.textContent = `${data.occupiedRooms} rooms in use`;
-    summaryEls.occupancySummary.textContent = `${occupancyPercent}%`;
-    summaryEls.resolvedSummary.textContent = `${data.resolvedComplaints} completed items`;
-    summaryEls.resolvedRate.textContent = `${resolvedPercent}%`;
-    summaryEls.staffSummary.textContent = `${data.staff} staff scheduled`;
-    summaryEls.staffStatus.textContent = "Live";
-}
+    if (!response.ok) {
+        throw new Error(payload.message || "Failed to fetch dashboard analytics.");
+    }
 
-function updateCharts(data) {
-    complaintsChart.data.datasets[0].data = [data.pendingComplaints, data.resolvedComplaints];
-    complaintsChart.update();
-
-    occupancyChart.data.datasets[0].data = [data.occupiedRooms, data.availableRooms];
-    occupancyChart.update();
-
-    activityChart.data.datasets[0].data = data.monthlyActivity;
-    activityChart.update();
-}
-
-function updateLabels(data) {
-    chartLabelEls.complaints.textContent = data.name;
-    chartLabelEls.occupancy.textContent = data.name;
-    chartLabelEls.activity.textContent = data.name;
-    chartLabelEls.snapshot.textContent = data.name;
-}
-
-function updateStats(data) {
-    const statMap = {
-        totalHostels: globalStats.totalHostels,
-        rooms: data.rooms,
-        students: data.students,
-        staff: data.staff,
-        complaints: data.complaints,
-        pendingComplaints: data.pendingComplaints
+    return {
+        overview: payload.data.overview,
+        hostels: Array.isArray(payload.data.hostels) ? payload.data.hostels : [],
+        monthLabels: Array.isArray(payload.data.month_labels) ? payload.data.month_labels : [],
+        selectedHostel: payload.data.selected_hostel || null,
+        selectedHostelId: payload.data.selected_hostel_id ?? null
     };
+}
 
-    statValues.forEach((element) => {
-        const key = element.dataset.stat;
-        animateValue(element, statMap[key]);
+function populateHostelSelector(hostels) {
+    hostelSelector.innerHTML = "";
+
+    const allOption = document.createElement("option");
+    allOption.value = "";
+    allOption.textContent = "All Hostels";
+    hostelSelector.appendChild(allOption);
+
+    if (hostels.length === 0) {
+      hostelSelector.innerHTML = '<option value="">No hostels available</option>';
+      return;
+    }
+
+    hostels.forEach((hostel) => {
+        const option = document.createElement("option");
+        option.value = String(hostel.hostel_id);
+        option.textContent = hostel.hostel_name;
+        hostelSelector.appendChild(option);
     });
 }
 
-function renderDashboard(hostelKey) {
-    const data = hostelData[hostelKey];
-    updateStats(data);
-    updateTrends(data);
-    updateSummaries(data);
-    updateLabels(data);
-    updateCharts(data);
+function updateOverviewStats(overview) {
+    statValues.forEach((element) => {
+        const key = element.dataset.stat;
+        animateValue(element, Number(overview[key] || 0));
+    });
+}
+
+function updateTrends(hostel) {
+    trendEls.roomsTrend.textContent = `${hostel.occupied_rooms}/${hostel.total_rooms}`;
+    trendEls.studentsTrend.textContent = hostel.total_rooms > 0
+        ? `${(hostel.total_students / hostel.total_rooms).toFixed(1)} / room`
+        : "0 / room";
+    trendEls.staffTrend.textContent = `${hostel.total_staff} active`;
+    trendEls.allocationsTrend.textContent = `${hostel.active_allocations} live`;
+    trendEls.availabilityTrend.textContent = `${hostel.available_rooms} open`;
+}
+
+function updateSummaries(hostel) {
+    const occupancyPercent = hostel.total_rooms > 0
+        ? Math.round((hostel.occupied_rooms / hostel.total_rooms) * 100)
+        : 0;
+    const allocationIntensity = hostel.total_rooms > 0
+        ? Math.round((hostel.active_allocations / hostel.total_rooms) * 100)
+        : 0;
+    const studentsPerOccupiedRoom = hostel.occupied_rooms > 0
+        ? (hostel.total_students / hostel.occupied_rooms).toFixed(1)
+        : 0;
+
+    summaryEls.occupiedSummary.textContent = `${hostel.occupied_rooms} rooms in use`;
+    summaryEls.availableSummary.textContent = `${hostel.available_rooms} ready`;
+    summaryEls.allocationIntensity.textContent = `${allocationIntensity}%`;
+    summaryEls.allocationSummary.textContent = `${hostel.active_allocations} active`;
+    summaryEls.studentsPerRoom.textContent = `${studentsPerOccupiedRoom}`;
+    summaryEls.staffSummary.textContent = `${hostel.total_staff} staff scheduled`;
+    summaryEls.staffStatus.textContent = occupancyPercent > 85 ? "Tight" : "Balanced";
+}
+
+function updateCharts(hostel) {
+    capacityChart.data.datasets[0].data = [
+        hostel.occupied_rooms,
+        hostel.available_rooms
+    ];
+    capacityChart.update();
+
+    occupancyChart.data.datasets[0].data = [
+        hostel.total_students,
+        hostel.total_staff
+    ];
+    occupancyChart.update();
+
+    activityChart.data.labels = dashboardData.monthLabels;
+    activityChart.data.datasets[0].data = hostel.monthly_activity;
+    activityChart.update();
+}
+
+function updateLabels(hostel) {
+    chartLabelEls.capacity.textContent = hostel.hostel_name;
+    chartLabelEls.occupancy.textContent = hostel.hostel_name;
+    chartLabelEls.activity.textContent = hostel.hostel_name;
+    chartLabelEls.snapshot.textContent = hostel.hostel_name;
+}
+
+function renderSelectedHostel() {
+    const hostel = dashboardData.selectedHostel;
+
+    if (!hostel) {
+        setStatusState("No data available");
+        return;
+    }
+
+    updateTrends(hostel);
+    updateSummaries(hostel);
+    updateLabels(hostel);
+    updateCharts(hostel);
+}
+
+async function loadDashboard(hostelId = "") {
+    setStatusState("Loading...");
+
+    try {
+        dashboardData = await fetchDashboardData(hostelId);
+        updateOverviewStats(dashboardData.overview || {});
+        
+        if (!hostelSelector.dataset.initialized) {
+            populateHostelSelector(dashboardData.hostels);
+            hostelSelector.dataset.initialized = "true";
+        }
+
+        hostelSelector.value = dashboardData.selectedHostelId ? String(dashboardData.selectedHostelId) : "";
+
+        if (dashboardData.hostels.length === 0) {
+            setStatusState("No hostels available");
+            return;
+        }
+
+        renderSelectedHostel();
+    } catch (error) {
+        setStatusState(error.message);
+        hostelSelector.innerHTML = '<option value="">Unable to load</option>';
+    }
 }
 
 hostelSelector.addEventListener("change", (event) => {
-    renderDashboard(event.target.value);
+    void loadDashboard(event.target.value);
 });
 
 handleResize();
-renderDashboard(hostelSelector.value);
+void loadDashboard();

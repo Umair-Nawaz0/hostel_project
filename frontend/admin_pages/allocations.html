@@ -1,85 +1,221 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Allocations</title>
-
-<link rel="stylesheet" href="../css/admin_css/allocations.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Allocation Management | Hostel OS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/admin_css/allocations.css">
+    <link rel="stylesheet" href="../css/admin_css/erp-theme.css">
 </head>
+<body class="min-h-screen overflow-x-hidden bg-slate-950 text-slate-100">
+    <div class="page-bg"></div>
+    <div class="page-noise"></div>
+    <div id="mobileOverlay" class="mobile-overlay lg:hidden"></div>
 
-<body>
+    <aside class="sidebar-shell fixed left-0 top-0 z-40 h-screen p-5 lg:hidden">
+        <div class="sidebar-brand mb-8 flex items-center gap-3">
+            <span class="brand-mark">
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M3 10.5 12 3l9 7.5"></path>
+                    <path d="M5.25 9.75V21h13.5V9.75"></path>
+                </svg>
+            </span>
+            <div class="sidebar-copy">
+                <p class="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-200/80">Hostel OS</p>
+                <p class="text-xs text-slate-400">Admin Navigation</p>
+            </div>
+        </div>
+        <nav class="space-y-2">
+            <a href="dashboard.html" class="nav-item"><span class="nav-icon">🏠</span><span class="nav-label">Dashboard</span></a>
+            <a href="hostel.html" class="nav-item"><span class="nav-icon">🏢</span><span class="nav-label">Hostels</span></a>
+            <a href="rooms.html" class="nav-item"><span class="nav-icon">🛏️</span><span class="nav-label">Rooms</span></a>
+            <a href="students.html" class="nav-item"><span class="nav-icon">🎓</span><span class="nav-label">Students</span></a>
+            <a href="staff.html" class="nav-item"><span class="nav-icon">🧑‍💼</span><span class="nav-label">Staff</span></a>
+            <a href="allocations.html" class="nav-item active"><span class="nav-icon">🧾</span><span class="nav-label">Allocations</span></a>
+            <a href="payments.html" class="nav-item"><span class="nav-icon">💳</span><span class="nav-label">Payments</span></a>
+        </nav>
+        <a href="login.html" class="nav-item logout-item mt-8"><span class="nav-icon">↩</span><span class="nav-label">Logout</span></a>
+    </aside>
 
-<div class="hamburger" id="hamburger">☰</div>
-<div class="overlay" id="overlay"></div>
+    <main class="main-shell relative z-10 min-h-screen px-4 py-4 sm:px-6 lg:px-8">
+        <header class="nav-shell sticky top-4 z-20 mb-6 flex items-center justify-between gap-4 px-4 py-4 sm:px-6">
+            <div class="flex items-center gap-3">
+                <button id="mobileMenuButton" type="button" class="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-slate-100 transition hover:bg-white/10 lg:hidden">☰</button>
+                <a href="dashboard.html" class="brand-link">
+                    <span class="brand-mark">
+                        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                            <path d="M3 10.5 12 3l9 7.5"></path>
+                            <path d="M5.25 9.75V21h13.5V9.75"></path>
+                        </svg>
+                    </span>
+                    <span class="brand-copy">Hostel OS</span>
+                </a>
+            </div>
+            <nav class="desktop-nav hidden lg:flex">
+                <a href="dashboard.html" class="desktop-nav-link">Dashboard</a>
+                <a href="hostel.html" class="desktop-nav-link">Hostels</a>
+                <a href="rooms.html" class="desktop-nav-link">Rooms</a>
+                <a href="students.html" class="desktop-nav-link">Students</a>
+                <a href="staff.html" class="desktop-nav-link">Staff</a>
+                <a href="allocations.html" class="desktop-nav-link active">Allocations</a>
+                <a href="payments.html" class="desktop-nav-link">Payments</a>
+            </nav>
+            <div class="flex items-center gap-3">
+                <div class="header-avatar hidden sm:flex">AD</div>
+                <a href="login.html" class="header-action inline-flex">Logout</a>
+            </div>
+        </header>
 
-<div class="dashboard">
+        <section class="topbar-shell page-enter mb-6 flex flex-col gap-4 px-4 py-5 sm:px-6 xl:flex-row xl:items-center xl:justify-between">
+            <div>
+                <p class="text-sm uppercase tracking-[0.35em] text-cyan-200/70">Administration</p>
+                <h1 class="mt-2 text-2xl font-semibold text-white sm:text-3xl">Allocation Management</h1>
+            </div>
+            <div class="allocation-controls w-full">
+                <select id="hostelFilter" class="control-shell allocation-control-select rounded-2xl px-4 py-3 text-sm text-slate-100 outline-none">
+                    <option value="">All Hostels</option>
+                </select>
+                <div class="search-shell allocation-control-search rounded-2xl px-4 py-3">
+                    <svg class="search-icon h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="7"></circle>
+                        <path d="m20 20-3.5-3.5"></path>
+                    </svg>
+                    <input id="allocationSearch" type="search" class="search-input text-sm text-slate-100 outline-none" placeholder="Search allocations" aria-label="Search allocations">
+                </div>
+                <button id="openAllocationModal" type="button" class="add-btn allocation-control-button rounded-2xl px-5 py-3 text-sm font-semibold text-white">+ Add Allocation</button>
+            </div>
+        </section>
 
-<!-- Sidebar -->
-<aside class="sidebar" id="sidebar">
-    <h2>Hostel Admin</h2>
-    <ul>
-        <li><a href="dashboard.html">Dashboard</a></li>
-        <li><a href="students.html">Students</a></li>
-        <li><a href="rooms.html">Rooms</a></li>
-        <li class="active"><a href="allocations.html">Allocations</a></li>
-        <li><a href="payments.html">Payments</a></li>
-        <li><a href="complaints.html">Complaints</a></li>
-        <li><a href="staff.html">Staff</a></li>
-        <li><a href="inventory.html">Inventory</a></li>
-        <li><a href="login.html">Logout</a></li>
-    </ul>
-</aside>
+        <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <article class="summary-card p-5">
+                <p class="summary-label">Total Allocations</p>
+                <p id="totalAllocations" class="summary-value">0</p>
+            </article>
+            <article class="summary-card p-5">
+                <p class="summary-label">Active Allocations</p>
+                <p id="activeAllocations" class="summary-value">0</p>
+            </article>
+            <article class="summary-card p-5">
+                <p class="summary-label">Vacated Allocations</p>
+                <p id="vacatedAllocations" class="summary-value">0</p>
+            </article>
+            <article class="summary-card p-5">
+                <p class="summary-label">Available Rooms</p>
+                <p id="availableRooms" class="summary-value">0</p>
+            </article>
+        </section>
 
-<!-- Main -->
-<main class="main">
+        <p id="pageMessage" class="mt-4 hidden rounded-2xl border px-4 py-3 text-sm"></p>
 
-<div class="topbar">
-    <h1>Room Allocations</h1>
-    <button id="openModal">+ Assign Room</button>
-</div>
+        <section class="table-shell mt-6 overflow-hidden">
+            <div class="table-shell-header flex flex-col gap-4 border-b border-white/8 px-4 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+                <h2 class="text-xl font-semibold text-white">Allocations</h2>
+                <div class="flex flex-wrap items-center gap-3 text-sm text-slate-300">
+                    <span id="selectedHostelLabel" class="table-meta-pill">All Hostels</span>
+                    <span id="searchQueryLabel" class="table-meta-pill">All Records</span>
+                </div>
+            </div>
 
-<div class="search-box">
-    <input id="search" placeholder="Search student or room...">
-</div>
+            <div class="hidden overflow-x-auto lg:block">
+                <table class="allocation-table min-w-full">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Room</th>
+                            <th>Hostel</th>
+                            <th>Allocated</th>
+                            <th>Vacated</th>
+                            <th>Status</th>
+                            <th class="text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="allocationTable"></tbody>
+                </table>
+            </div>
 
-<div class="table-section">
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Student</th>
-<th>Room</th>
-<th>Date</th>
-<th>Status</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody id="table"></tbody>
-</table>
-</div>
+            <div id="allocationCards" class="grid gap-4 p-4 lg:hidden"></div>
+        </section>
+    </main>
 
-</main>
-</div>
+    <div id="allocationModal" class="modal-backdrop hidden z-50 flex items-center justify-center p-4">
+        <div class="modal-panel w-full max-w-4xl p-6">
+            <div class="mb-5 flex items-center justify-between gap-4">
+                <h2 id="modalTitle" class="text-xl font-semibold text-white">Add Allocation</h2>
+                <button type="button" data-close-allocation-modal class="text-2xl text-slate-400">×</button>
+            </div>
+            <p id="formError" class="mb-4 hidden rounded-2xl border border-rose-400/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-200"></p>
+            <form id="allocationForm" class="grid gap-4 sm:grid-cols-2">
+                <div class="sm:col-span-2">
+                    <label class="form-label" for="studentSelect">Student <span class="text-rose-300">*</span></label>
+                    <select id="studentSelect" class="form-input mt-2 w-full" required></select>
+                    <p id="studentSelectError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+                <div class="sm:col-span-2">
+                    <label class="form-label" for="roomSelect">Room <span class="text-rose-300">*</span></label>
+                    <select id="roomSelect" class="form-input mt-2 w-full" required></select>
+                    <p id="roomSelectError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+                <div>
+                    <label class="form-label" for="bedSelect">Bed <span class="text-rose-300">*</span></label>
+                    <select id="bedSelect" class="form-input mt-2 w-full" required>
+                        <option value="">Select Bed</option>
+                    </select>
+                    <p id="bedSelectError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+                <div>
+                    <label class="form-label" for="allocatedDate">Allocated Date <span class="text-rose-300">*</span></label>
+                    <input id="allocatedDate" class="form-input mt-2 w-full" type="date" required>
+                    <p id="allocatedDateError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+                <div>
+                    <label class="form-label" for="allocationStatus">Status</label>
+                    <select id="allocationStatus" class="form-input mt-2 w-full">
+                        <option value="Active">Active</option>
+                        <option value="Vacated">Vacated</option>
+                    </select>
+                    <p id="allocationStatusError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+                <div id="vacatedDateField" class="hidden">
+                    <label class="form-label" for="vacatedDate">Vacated Date</label>
+                    <input id="vacatedDate" class="form-input mt-2 w-full" type="date">
+                    <p id="vacatedDateError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+                <div class="sm:col-span-2 grid gap-4 rounded-[1.4rem] border border-white/8 bg-white/[0.03] p-4">
+                    <div id="allocationPreview" class="grid gap-3 sm:grid-cols-3"></div>
+                </div>
+                <div class="sm:col-span-2 flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
+                    <button type="button" data-close-allocation-modal class="rounded-2xl border border-white/10 px-5 py-3 text-sm text-slate-200">Cancel</button>
+                    <button type="submit" class="add-btn rounded-2xl px-5 py-3 text-sm font-semibold text-white">Save Allocation</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-<!-- Modal -->
-<div class="modal" id="modal">
-<div class="modal-box">
+    <div id="detailsModal" class="modal-backdrop hidden z-50 flex items-center justify-center p-4">
+        <div class="modal-panel details-modal-panel w-full max-w-4xl p-6">
+            <div class="mb-5 flex items-center justify-between gap-4">
+                <h2 id="detailsTitle" class="text-xl font-semibold text-white">Allocation Details</h2>
+                <button type="button" data-close-details class="text-2xl text-slate-400">×</button>
+            </div>
+            <div id="detailsContent" class="details-shell"></div>
+        </div>
+    </div>
 
-<h2>Assign Room</h2>
+    <div id="confirmModal" class="modal-backdrop hidden z-50 flex items-center justify-center p-4">
+        <div class="modal-panel w-full max-w-md p-6 text-center">
+            <h2 id="confirmTitle" class="text-xl font-semibold text-white">Confirm Action</h2>
+            <p id="confirmText" class="mt-3 text-sm text-slate-300"></p>
+            <div class="mt-6 flex justify-center gap-3">
+                <button type="button" data-close-confirm class="rounded-2xl border border-white/10 px-5 py-3 text-sm text-slate-200">Cancel</button>
+                <button id="confirmAction" type="button" class="delete-btn rounded-2xl px-5 py-3 text-sm font-semibold text-white">Continue</button>
+            </div>
+        </div>
+    </div>
 
-<input id="studentName" placeholder="Student Name">
-<input id="roomNo" placeholder="Room Number">
-
-<div class="modal-actions">
-<button id="save">Assign</button>
-<button id="close">Cancel</button>
-</div>
-
-</div>
-</div>
-
-<script src="../js/admin_js/allocations.js"></script>
+    <script src="../js/admin_js/allocations.js"></script>
 </body>
 </html>

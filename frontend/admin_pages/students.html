@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../css/admin_css/students.css">
+    <link rel="stylesheet" href="../css/admin_css/erp-theme.css">
 </head>
 <body class="min-h-screen overflow-x-hidden bg-slate-950 text-slate-100">
     <div class="page-bg"></div>
@@ -23,8 +24,7 @@
             <a href="rooms.html" class="nav-item"><span class="nav-icon">🛏️</span><span class="nav-label">Rooms</span></a>
             <a href="students.html" class="nav-item active"><span class="nav-icon">🎓</span><span class="nav-label">Students</span></a>
             <a href="staff.html" class="nav-item"><span class="nav-icon">🧑‍💼</span><span class="nav-label">Staff</span></a>
-            <a href="complaints.html" class="nav-item"><span class="nav-icon">📣</span><span class="nav-label">Complaints</span></a>
-            <a href="maintenance.html" class="nav-item"><span class="nav-icon">🛠️</span><span class="nav-label">Maintenance</span></a>
+            <a href="allocations.html" class="nav-item"><span class="nav-icon">🧾</span><span class="nav-label">Allocations</span></a>
             <a href="payments.html" class="nav-item"><span class="nav-icon">💳</span><span class="nav-label">Payments</span></a>
         </nav>
         <a href="login.html" class="nav-item logout-item mt-8"><span class="nav-icon">↩</span><span class="nav-label">Logout</span></a>
@@ -42,23 +42,36 @@
                 <a href="rooms.html" class="desktop-nav-link">Rooms</a>
                 <a href="students.html" class="desktop-nav-link active">Students</a>
                 <a href="staff.html" class="desktop-nav-link">Staff</a>
-                <a href="complaints.html" class="desktop-nav-link">Complaints</a>
-                <a href="maintenance.html" class="desktop-nav-link">Maintenance</a>
+                <a href="allocations.html" class="desktop-nav-link">Allocations</a>
                 <a href="payments.html" class="desktop-nav-link">Payments</a>
             </nav>
             <div class="flex items-center gap-3"><div class="header-avatar hidden sm:flex">AD</div><a href="login.html" class="header-action inline-flex">Logout</a></div>
         </header>
 
         <section class="topbar-shell page-enter mb-6 flex flex-col gap-4 px-4 py-5 sm:px-6">
-            <div class="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+            <div class="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
                 <div>
                     <p class="text-sm uppercase tracking-[0.35em] text-cyan-200/70">Administration</p>
                     <h1 class="mt-2 text-2xl font-semibold text-white sm:text-3xl">Student Management</h1>
                 </div>
-                <div class="flex w-full flex-col gap-3 md:flex-row xl:w-auto">
-                    <select id="hostelFilter" class="control-shell rounded-2xl px-4 py-3 text-sm text-slate-100 outline-none"></select>
-                    <select id="roomFilter" class="control-shell rounded-2xl px-4 py-3 text-sm text-slate-100 outline-none"></select>
-                    <button id="openStudentModal" type="button" class="add-btn rounded-2xl px-5 py-3 text-sm font-semibold text-white">+ Add Student</button>
+                <div class="students-toolbar w-full xl:w-auto">
+                    <label class="toolbar-field toolbar-select" for="hostelFilter">
+                        <span class="toolbar-label">Hostel</span>
+                        <select id="hostelFilter" class="toolbar-input"></select>
+                    </label>
+                    <label class="toolbar-field toolbar-search" for="studentSearch">
+                        <span class="toolbar-label">Search Student</span>
+                        <div class="toolbar-search-wrap">
+                            <span class="toolbar-search-icon" aria-hidden="true">
+                                <svg class="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <circle cx="9" cy="9" r="5.5"></circle>
+                                    <path d="m13.5 13.5 4 4"></path>
+                                </svg>
+                            </span>
+                            <input id="studentSearch" class="toolbar-input toolbar-search-input" type="search" placeholder="Search by name or roll number">
+                        </div>
+                    </label>
+                    <button id="openStudentModal" type="button" class="add-btn toolbar-button rounded-2xl px-5 py-3 text-sm font-semibold text-white">+ Add Student</button>
                 </div>
             </div>
         </section>
@@ -66,8 +79,8 @@
         <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             <article class="summary-card p-5"><p class="summary-label">Filtered Students</p><p id="filteredStudents" class="summary-value">0</p></article>
             <article class="summary-card p-5"><p class="summary-label">Active Students</p><p id="activeStudents" class="summary-value">0</p></article>
-            <article class="summary-card p-5"><p class="summary-label">Selected Hostel</p><p id="selectedHostelName" class="summary-value text-lg">Hostel A</p></article>
-            <article class="summary-card p-5"><p class="summary-label">Selected Room</p><p id="selectedRoomName" class="summary-value text-lg">All Rooms</p></article>
+            <article class="summary-card p-5"><p class="summary-label">Selected Hostel</p><p id="selectedHostelName" class="summary-value text-lg">All Hostels</p></article>
+            <article class="summary-card p-5"><p class="summary-label">Search Query</p><p id="searchQueryLabel" class="summary-value text-lg">All Students</p></article>
         </section>
 
         <section class="table-shell mt-6 overflow-hidden">
@@ -76,6 +89,7 @@
                     <thead class="border-b border-white/10 text-xs uppercase tracking-[0.25em] text-slate-400">
                         <tr>
                             <th class="px-4 py-4">Name</th>
+                            <th class="px-4 py-4">Roll Number</th>
                             <th class="px-4 py-4">Email</th>
                             <th class="px-4 py-4">Phone</th>
                             <th class="px-4 py-4">Hostel</th>
@@ -96,13 +110,58 @@
             <div class="mb-5 flex items-center justify-between gap-4"><h2 id="modalTitle" class="text-xl font-semibold text-white">Add Student</h2><button type="button" data-close-student-modal class="text-2xl text-slate-400">×</button></div>
             <p id="formError" class="mb-4 hidden rounded-2xl border border-rose-400/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-200"></p>
             <form id="studentForm" class="grid gap-4 sm:grid-cols-2">
-                <div><label class="form-label" for="studentName">Name</label><input id="studentName" class="form-input mt-2 w-full" type="text"></div>
-                <div><label class="form-label" for="studentEmail">Email</label><input id="studentEmail" class="form-input mt-2 w-full" type="email"></div>
-                <div><label class="form-label" for="studentPhone">Phone</label><input id="studentPhone" class="form-input mt-2 w-full" type="text"></div>
-                <div><label class="form-label" for="checkInDate">Check-in Date</label><input id="checkInDate" class="form-input mt-2 w-full" type="date"></div>
-                <div><label class="form-label" for="studentHostel">Hostel</label><select id="studentHostel" class="form-input mt-2 w-full"></select></div>
-                <div><label class="form-label" for="studentRoom">Room</label><select id="studentRoom" class="form-input mt-2 w-full"></select></div>
-                <div class="sm:col-span-2"><label class="form-label" for="studentStatus">Status</label><select id="studentStatus" class="form-input mt-2 w-full"><option>Active</option><option>Left</option></select></div>
+                <div>
+                    <label class="form-label" for="rollNumber">Roll Number <span class="text-rose-300">*</span></label>
+                    <input id="rollNumber" class="form-input mt-2 w-full" type="text" maxlength="20" required>
+                    <p id="rollNumberError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+                <div>
+                    <label class="form-label" for="studentName">Full Name <span class="text-rose-300">*</span></label>
+                    <input id="studentName" class="form-input mt-2 w-full" type="text" maxlength="100" required>
+                    <p id="studentNameError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+                <div>
+                    <label class="form-label" for="studentEmail">Email <span class="text-rose-300">*</span></label>
+                    <input id="studentEmail" class="form-input mt-2 w-full" type="email" maxlength="100" required>
+                    <p id="studentEmailError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+                <div>
+                    <label class="form-label" for="studentPhone">Phone <span class="text-rose-300">*</span></label>
+                    <input id="studentPhone" class="form-input mt-2 w-full" type="text" maxlength="20" required>
+                    <p id="studentPhoneError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+                <div>
+                    <label class="form-label" for="department">Department <span class="text-rose-300">*</span></label>
+                    <input id="department" class="form-input mt-2 w-full" type="text" maxlength="100" required>
+                    <p id="departmentError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+                <div>
+                    <label class="form-label" for="program">Program <span class="text-rose-300">*</span></label>
+                    <input id="program" class="form-input mt-2 w-full" type="text" maxlength="60" required>
+                    <p id="programError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+                <div>
+                    <label class="form-label" for="guardianName">Guardian Name</label>
+                    <input id="guardianName" class="form-input mt-2 w-full" type="text" maxlength="100">
+                    <p id="guardianNameError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+                <div>
+                    <label class="form-label" for="guardianPhone">Guardian Phone</label>
+                    <input id="guardianPhone" class="form-input mt-2 w-full" type="text" maxlength="20">
+                    <p id="guardianPhoneError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+                <div>
+                    <label class="form-label" for="joinDate">Join Date <span class="text-rose-300">*</span></label>
+                    <input id="joinDate" class="form-input mt-2 w-full" type="date" required>
+                    <p id="joinDateError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+                <div>
+                    <label class="form-label" for="studentStatus">Status <span class="text-rose-300">*</span></label>
+                    <select id="studentStatus" class="form-input mt-2 w-full" required>
+                        <option value="">Select Status</option>
+                    </select>
+                    <p id="studentStatusError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
                 <div class="sm:col-span-2 flex justify-end gap-3 pt-2"><button type="button" data-close-student-modal class="rounded-2xl border border-white/10 px-5 py-3 text-sm text-slate-200">Cancel</button><button type="submit" class="add-btn rounded-2xl px-5 py-3 text-sm font-semibold text-white">Save</button></div>
             </form>
         </div>

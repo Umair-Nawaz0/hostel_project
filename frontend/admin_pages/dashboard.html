@@ -10,6 +10,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="../css/admin_css/dashboard.css">
+    <link rel="stylesheet" href="../css/admin_css/erp-theme.css">
 </head>
 <body class="min-h-screen overflow-x-hidden bg-slate-950 text-slate-100">
     <div class="dashboard-bg"></div>
@@ -35,8 +36,7 @@
             <a href="rooms.html" class="nav-item"><span class="nav-icon">🛏️</span><span class="nav-label">Rooms</span></a>
             <a href="students.html" class="nav-item"><span class="nav-icon">🎓</span><span class="nav-label">Students</span></a>
             <a href="staff.html" class="nav-item"><span class="nav-icon">🧑‍💼</span><span class="nav-label">Staff</span></a>
-            <a href="complaints.html" class="nav-item"><span class="nav-icon">📣</span><span class="nav-label">Complaints</span></a>
-            <a href="maintenance.html" class="nav-item"><span class="nav-icon">🛠️</span><span class="nav-label">Maintenance</span></a>
+            <a href="allocations.html" class="nav-item"><span class="nav-icon">🧾</span><span class="nav-label">Allocations</span></a>
             <a href="payments.html" class="nav-item"><span class="nav-icon">💳</span><span class="nav-label">Payments</span></a>
         </nav>
         <a href="login.html" class="nav-item logout-item mt-8"><span class="nav-icon">↩</span><span class="nav-label">Logout</span></a>
@@ -66,8 +66,7 @@
                 <a href="rooms.html" class="desktop-nav-link">Rooms</a>
                 <a href="students.html" class="desktop-nav-link">Students</a>
                 <a href="staff.html" class="desktop-nav-link">Staff</a>
-                <a href="complaints.html" class="desktop-nav-link">Complaints</a>
-                <a href="maintenance.html" class="desktop-nav-link">Maintenance</a>
+                <a href="allocations.html" class="desktop-nav-link">Allocations</a>
                 <a href="payments.html" class="desktop-nav-link">Payments</a>
             </nav>
             <div class="flex items-center gap-3">
@@ -85,9 +84,7 @@
                 <label class="glass-chip flex min-w-[220px] items-center gap-3 rounded-2xl px-4 py-3">
                     <span class="text-xs uppercase tracking-[0.3em] text-slate-400">Select Hostel</span>
                     <select id="hostelSelector" class="w-full bg-transparent text-sm text-slate-100 outline-none">
-                        <option value="hostelA">Hostel A</option>
-                        <option value="hostelB">Hostel B</option>
-                        <option value="hostelC">Hostel C</option>
+                        <option value="">Loading hostels...</option>
                     </select>
                 </label>
                 <label class="top-search flex items-center gap-3 rounded-2xl px-4 py-3">
@@ -106,7 +103,7 @@
                     <span class="stat-label">Total Hostels</span>
                     <span class="stat-icon cyan-icon">🏢</span>
                 </div>
-                <p class="stat-value" data-stat="3">0</p>
+                <p class="stat-value" data-stat="total_hostels">0</p>
                 <p class="stat-trend">Network-wide capacity</p>
             </article>
             <article class="stat-card page-enter p-5">
@@ -114,7 +111,7 @@
                     <span class="stat-label">Rooms</span>
                     <span class="stat-icon indigo-icon">🛏️</span>
                 </div>
-                <p class="stat-value" data-stat="48">0</p>
+                <p class="stat-value" data-stat="total_rooms">0</p>
                 <p id="roomsTrend" class="stat-trend">0/0</p>
             </article>
             <article class="stat-card page-enter p-5">
@@ -122,7 +119,7 @@
                     <span class="stat-label">Students</span>
                     <span class="stat-icon emerald-icon">🎓</span>
                 </div>
-                <p class="stat-value" data-stat="116">0</p>
+                <p class="stat-value" data-stat="total_students">0</p>
                 <p id="studentsTrend" class="stat-trend">0 / room</p>
             </article>
             <article class="stat-card page-enter p-5">
@@ -130,24 +127,24 @@
                     <span class="stat-label">Staff</span>
                     <span class="stat-icon violet-icon">🧑‍💼</span>
                 </div>
-                <p class="stat-value" data-stat="14">0</p>
+                <p class="stat-value" data-stat="total_staff">0</p>
                 <p id="staffTrend" class="stat-trend">0 active</p>
             </article>
             <article class="stat-card page-enter p-5">
                 <div class="stat-head">
-                    <span class="stat-label">Complaints</span>
-                    <span class="stat-icon amber-icon">📣</span>
+                    <span class="stat-label">Active Allocations</span>
+                    <span class="stat-icon amber-icon">🧾</span>
                 </div>
-                <p class="stat-value" data-stat="26">0</p>
-                <p id="complaintsTrend" class="stat-trend">0 resolved</p>
+                <p class="stat-value" data-stat="active_allocations">0</p>
+                <p id="allocationsTrend" class="stat-trend">0 live</p>
             </article>
             <article class="stat-card page-enter p-5">
                 <div class="stat-head">
-                    <span class="stat-label">Pending Complaints</span>
-                    <span class="stat-icon rose-icon">⏳</span>
+                    <span class="stat-label">Available Rooms</span>
+                    <span class="stat-icon rose-icon">📦</span>
                 </div>
-                <p class="stat-value" data-stat="8">0</p>
-                <p id="pendingTrend" class="stat-trend">0 open</p>
+                <p class="stat-value" data-stat="available_rooms">0</p>
+                <p id="availabilityTrend" class="stat-trend">0 open</p>
             </article>
         </section>
 
@@ -156,19 +153,19 @@
                 <article class="panel-card p-5">
                     <div class="panel-header mb-4 flex items-center justify-between">
                         <div>
-                            <p class="mini-title">Complaints Status</p>
-                            <p id="complaintsChartLabel" class="mini-sub">Pending vs resolved</p>
+                            <p class="mini-title">Capacity Snapshot</p>
+                            <p id="capacityChartLabel" class="mini-sub">Occupied vs available rooms</p>
                         </div>
                     </div>
                     <div class="doughnut-wrap mx-auto max-w-xs">
-                        <canvas id="complaintsChart"></canvas>
+                        <canvas id="capacityChart"></canvas>
                     </div>
                 </article>
                 <article class="panel-card p-5">
                     <div class="panel-header mb-4 flex items-center justify-between">
                         <div>
-                            <p class="mini-title">Room Occupancy</p>
-                            <p id="occupancyChartLabel" class="mini-sub">Occupied vs available</p>
+                            <p class="mini-title">Population Mix</p>
+                            <p id="occupancyChartLabel" class="mini-sub">Students vs staff</p>
                         </div>
                     </div>
                     <div class="chart-wrap h-72">
@@ -180,7 +177,7 @@
                 <article class="panel-card p-5">
                     <div class="panel-header mb-4 flex items-center justify-between">
                         <div>
-                            <p class="mini-title">Monthly Activity</p>
+                            <p class="mini-title">Monthly Allocations</p>
                             <p id="activityChartLabel" class="mini-sub">Last 6 months</p>
                         </div>
                     </div>
@@ -197,11 +194,12 @@
                     </div>
                     <div class="space-y-4">
                         <div class="mini-row"><span>Occupied rooms</span><span id="occupiedSummary">0</span></div>
-                        <div class="mini-row"><span>Occupancy</span><span id="occupancySummary">0%</span></div>
-                        <div class="mini-row"><span>Resolved complaints</span><span id="resolvedSummary">0</span></div>
-                        <div class="mini-row"><span>Resolution rate</span><span id="resolvedRate">0%</span></div>
-                        <div class="mini-row"><span>Staff availability</span><span id="staffSummary">0</span></div>
-                        <div class="mini-row"><span>Staff status</span><span id="staffStatus">Balanced</span></div>
+                        <div class="mini-row"><span>Available rooms</span><span id="availableSummary">0</span></div>
+                        <div class="mini-row"><span>Allocation intensity</span><span id="allocationIntensity">0%</span></div>
+                        <div class="mini-row"><span>Active allocations</span><span id="allocationSummary">0</span></div>
+                        <div class="mini-row"><span>Students per occupied room</span><span id="studentsPerRoom">0</span></div>
+                        <div class="mini-row"><span>Staff scheduled</span><span id="staffSummary">0</span></div>
+                        <div class="mini-row"><span>Coverage status</span><span id="staffStatus">Balanced</span></div>
                     </div>
                 </article>
             </div>

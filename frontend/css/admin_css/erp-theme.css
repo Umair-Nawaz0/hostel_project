@@ -1,0 +1,708 @@
+:root {
+    --erp-bg-soft: rgba(15, 23, 42, 0.72);
+    --erp-bg-elevated: rgba(15, 23, 42, 0.82);
+    --erp-glass: rgba(255, 255, 255, 0.045);
+    --erp-border: rgba(255, 255, 255, 0.1);
+    --erp-border-strong: rgba(125, 211, 252, 0.28);
+    --erp-text-main: #f8fafc;
+    --erp-text-muted: #94a3b8;
+    --erp-text-soft: #cbd5e1;
+    --erp-shadow: 0 24px 60px rgba(2, 6, 23, 0.34);
+    --erp-shadow-hover: 0 34px 80px rgba(2, 6, 23, 0.42);
+    --erp-shadow-glow: 0 0 0 1px rgba(148, 163, 184, 0.04), 0 20px 60px rgba(8, 47, 73, 0.28);
+    --erp-primary: linear-gradient(135deg, #06b6d4 0%, #2563eb 52%, #7c3aed 100%);
+    --erp-primary-hover: linear-gradient(135deg, #22d3ee 0%, #3b82f6 55%, #8b5cf6 100%);
+    --erp-secondary: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 118, 110, 0.82));
+    --erp-danger: linear-gradient(135deg, #ef4444 0%, #dc2626 55%, #9f1239 100%);
+    --erp-danger-soft: rgba(248, 113, 113, 0.12);
+    --erp-success-soft: rgba(74, 222, 128, 0.14);
+    --erp-warning-soft: rgba(250, 204, 21, 0.14);
+    --erp-info-soft: rgba(56, 189, 248, 0.14);
+    --erp-radius-xl: 1.5rem;
+    --erp-radius-lg: 1.15rem;
+    --erp-radius-pill: 999px;
+    --erp-transition: 220ms cubic-bezier(0.22, 1, 0.36, 1);
+    --erp-transition-slow: 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    color: var(--erp-text-main);
+}
+
+a,
+button,
+select,
+summary,
+[role="button"],
+[data-action],
+[data-close-room-modal],
+[data-close-student-modal],
+[data-close-payment-modal],
+[data-close-allocation-modal],
+[data-close-confirm],
+[data-close-details],
+.nav-item,
+.desktop-nav-link,
+.header-action,
+.card-action,
+.ghost-action,
+.add-btn,
+.details-btn,
+.delete-btn,
+.summary-card,
+.stat-card,
+.panel-card,
+.room-card,
+.hostel-card,
+.mobile-card,
+.preview-card,
+.detail-item,
+.table-shell tbody tr,
+.allocation-table tbody tr {
+    cursor: pointer;
+}
+
+.main-shell,
+main.main-shell {
+    max-width: 1680px;
+    margin-inline: auto;
+}
+
+.nav-shell,
+.topbar-shell,
+.summary-card,
+.stat-card,
+.panel-card,
+.table-shell,
+.room-card,
+.hostel-card,
+.mobile-card,
+.modal-panel,
+.details-section,
+.details-stat-card,
+.control-shell,
+.search-shell,
+.preview-card,
+.detail-item,
+.glass-chip,
+.profile-chip {
+    box-shadow: var(--erp-shadow);
+}
+
+.nav-shell,
+.topbar-shell,
+.summary-card,
+.stat-card,
+.panel-card,
+.table-shell,
+.room-card,
+.hostel-card,
+.mobile-card,
+.modal-panel,
+.details-section,
+.details-stat-card,
+.control-shell,
+.search-shell,
+.preview-card {
+    border-color: var(--erp-border) !important;
+}
+
+.nav-shell,
+.topbar-shell,
+.summary-card,
+.stat-card,
+.panel-card,
+.table-shell,
+.room-card,
+.hostel-card,
+.mobile-card,
+.modal-panel,
+.details-section,
+.details-stat-card,
+.control-shell,
+.search-shell,
+.preview-card,
+.detail-item {
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.015)),
+        var(--erp-bg-soft);
+}
+
+.summary-card,
+.stat-card,
+.panel-card,
+.room-card,
+.hostel-card,
+.mobile-card,
+.details-stat-card,
+.preview-card,
+.detail-item {
+    transition:
+        transform var(--erp-transition),
+        box-shadow var(--erp-transition),
+        border-color var(--erp-transition),
+        background-color var(--erp-transition);
+}
+
+.summary-card:hover,
+.stat-card:hover,
+.panel-card:hover,
+.room-card:hover,
+.hostel-card:hover,
+.mobile-card:hover,
+.details-stat-card:hover,
+.preview-card:hover,
+.detail-item:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--erp-shadow-hover), 0 0 35px rgba(34, 211, 238, 0.08);
+    border-color: rgba(125, 211, 252, 0.2) !important;
+}
+
+.summary-card::after,
+.stat-card::after,
+.panel-card::after,
+.room-card::after,
+.hostel-card::after,
+.mobile-card::after,
+.modal-panel::after,
+.details-stat-card::after,
+.preview-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.08), transparent 36%);
+    pointer-events: none;
+    opacity: 0.9;
+}
+
+.topbar-shell,
+.nav-shell {
+    box-shadow: var(--erp-shadow-glow);
+}
+
+.sidebar-shell {
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)),
+        rgba(2, 6, 23, 0.84);
+    box-shadow: 26px 0 70px rgba(2, 6, 23, 0.42);
+}
+
+.nav-item,
+.desktop-nav-link,
+.header-action,
+.add-btn,
+.details-btn,
+.delete-btn,
+.card-action,
+.ghost-action,
+.tab-chip,
+.table-meta-pill,
+.entity-badge,
+.header-avatar,
+.brand-mark,
+button,
+[role="button"] {
+    transition:
+        transform var(--erp-transition),
+        box-shadow var(--erp-transition),
+        background var(--erp-transition),
+        border-color var(--erp-transition),
+        color var(--erp-transition),
+        opacity var(--erp-transition),
+        filter var(--erp-transition);
+}
+
+.nav-item,
+.desktop-nav-link,
+.header-action,
+.card-action,
+.ghost-action,
+.add-btn,
+.details-btn,
+.delete-btn,
+.table-meta-pill,
+.entity-badge,
+.tab-chip {
+    isolation: isolate;
+}
+
+.nav-item::after,
+.desktop-nav-link::after,
+.header-action::after,
+.card-action::after,
+.ghost-action::after,
+.add-btn::after,
+.details-btn::after,
+.delete-btn::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent 20%, rgba(255, 255, 255, 0.22) 50%, transparent 80%);
+    transform: translateX(-130%);
+    transition: transform var(--erp-transition-slow);
+    pointer-events: none;
+    opacity: 0.85;
+}
+
+.add-btn,
+.details-btn,
+.toolbar-button,
+.allocation-control-button,
+.rooms-control-button,
+.staff-control-button,
+.login-button {
+    position: relative;
+    overflow: hidden;
+    background: var(--erp-primary) !important;
+    border: 1px solid rgba(147, 197, 253, 0.42) !important;
+    color: #ffffff !important;
+    box-shadow:
+        0 20px 42px rgba(37, 99, 235, 0.32),
+        0 0 0 1px rgba(255, 255, 255, 0.04),
+        0 0 24px rgba(34, 211, 238, 0.14);
+    filter: saturate(1.06);
+}
+
+.add-btn:hover,
+.details-btn:hover,
+.toolbar-button:hover,
+.allocation-control-button:hover,
+.rooms-control-button:hover,
+.staff-control-button:hover,
+.login-button:hover {
+    transform: translateY(-3px) scale(1.025);
+    background: var(--erp-primary-hover) !important;
+    box-shadow:
+        0 28px 56px rgba(37, 99, 235, 0.36),
+        0 0 34px rgba(34, 211, 238, 0.2);
+    filter: saturate(1.12);
+}
+
+.add-btn:hover::after,
+.details-btn:hover::after,
+.delete-btn:hover::after,
+.card-action:hover::after,
+.ghost-action:hover::after,
+.header-action:hover::after,
+.nav-item:hover::after,
+.desktop-nav-link:hover::after {
+    transform: translateX(130%);
+}
+
+.add-btn:active,
+.details-btn:active,
+.toolbar-button:active,
+.allocation-control-button:active,
+.rooms-control-button:active,
+.staff-control-button:active,
+.delete-btn:active,
+.card-action:active,
+.ghost-action:active,
+.header-action:active,
+.login-button:active {
+    transform: translateY(0) scale(0.985);
+}
+
+.details-btn {
+    background: var(--erp-secondary) !important;
+    border-color: rgba(103, 232, 249, 0.34) !important;
+    box-shadow:
+        0 20px 40px rgba(13, 148, 136, 0.24),
+        0 0 22px rgba(45, 212, 191, 0.12);
+}
+
+.delete-btn,
+.ghost-action-danger {
+    background: var(--erp-danger) !important;
+    border-color: rgba(248, 113, 113, 0.4) !important;
+    color: #fff !important;
+    box-shadow:
+        0 20px 40px rgba(220, 38, 38, 0.28),
+        0 0 22px rgba(248, 113, 113, 0.12);
+}
+
+.delete-btn:hover,
+.ghost-action-danger:hover {
+    transform: translateY(-3px) scale(1.025);
+    box-shadow: 0 28px 52px rgba(220, 38, 38, 0.34), 0 0 28px rgba(248, 113, 113, 0.18);
+}
+
+.card-action,
+.ghost-action {
+    border: 1px solid rgba(148, 163, 184, 0.18) !important;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04)) !important;
+    color: #e5eefb !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 10px 24px rgba(2, 6, 23, 0.16);
+}
+
+.card-action:hover,
+.ghost-action:hover {
+    transform: translateY(-2px) scale(1.02);
+    border-color: rgba(125, 211, 252, 0.34) !important;
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.18), rgba(37, 99, 235, 0.16)) !important;
+    color: #fff !important;
+    box-shadow:
+        0 18px 32px rgba(8, 47, 73, 0.24),
+        0 0 20px rgba(34, 211, 238, 0.1);
+}
+
+[data-close-room-modal],
+[data-close-student-modal],
+[data-close-payment-modal],
+[data-close-allocation-modal],
+[data-close-confirm],
+[data-close-details],
+.modal-panel button[type="button"]:not(.delete-btn):not(.ghost-action):not(.card-action):not(.header-action):not(.add-btn):not(.details-btn),
+.form-secondary {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.12) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+[data-close-room-modal]:hover,
+[data-close-student-modal]:hover,
+[data-close-payment-modal]:hover,
+[data-close-allocation-modal]:hover,
+[data-close-confirm]:hover,
+[data-close-details]:hover,
+.modal-panel button[type="button"]:not(.delete-btn):not(.ghost-action):not(.card-action):not(.header-action):not(.add-btn):not(.details-btn):hover,
+.form-secondary:hover {
+    transform: translateY(-1px);
+    border-color: rgba(125, 211, 252, 0.22) !important;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.nav-item:hover,
+.desktop-nav-link:hover,
+.header-action:hover {
+    filter: brightness(1.06);
+}
+
+.nav-item.active,
+.desktop-nav-link.active {
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 16px 36px rgba(37, 99, 235, 0.18),
+        0 0 24px rgba(34, 211, 238, 0.12) !important;
+}
+
+.search-shell,
+.control-shell,
+.form-input,
+.input-shell input,
+select.control-shell,
+input.control-shell {
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    background: rgba(255, 255, 255, 0.045) !important;
+    color: var(--erp-text-main) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.search-shell:hover,
+.control-shell:hover,
+.form-input:hover,
+.input-shell input:hover {
+    border-color: rgba(148, 163, 184, 0.2) !important;
+    background: rgba(255, 255, 255, 0.06) !important;
+}
+
+.search-shell:focus-within,
+.control-shell:focus,
+.control-shell:focus-within,
+.form-input:focus,
+.input-shell input:focus {
+    border-color: rgba(103, 232, 249, 0.42) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    box-shadow:
+        0 0 0 4px rgba(34, 211, 238, 0.08),
+        0 18px 34px rgba(8, 47, 73, 0.16) !important;
+    outline: none;
+}
+
+.form-input::placeholder,
+.search-input::placeholder,
+.control-shell::placeholder,
+.input-shell input::placeholder {
+    color: rgba(148, 163, 184, 0.82) !important;
+}
+
+.form-label {
+    letter-spacing: 0.02em;
+    color: #e2e8f0 !important;
+}
+
+.modal-backdrop {
+    animation: erpFadeIn 180ms ease-out;
+}
+
+.modal-panel {
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)),
+        rgba(15, 23, 42, 0.86) !important;
+    box-shadow: 0 40px 100px rgba(2, 6, 23, 0.55), 0 0 30px rgba(34, 211, 238, 0.08);
+    animation: erpModalUp 220ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition:
+        transform var(--erp-transition-slow),
+        box-shadow var(--erp-transition-slow),
+        border-color var(--erp-transition);
+}
+
+.modal-panel:hover {
+    box-shadow: 0 46px 110px rgba(2, 6, 23, 0.58), 0 0 36px rgba(34, 211, 238, 0.1);
+    border-color: rgba(125, 211, 252, 0.18) !important;
+}
+
+.modal-panel h2,
+.modal-panel h3,
+.details-title,
+#modalTitle,
+#detailsTitle,
+#confirmTitle {
+    letter-spacing: -0.02em;
+}
+
+.modal-panel form {
+    row-gap: 1.1rem !important;
+}
+
+.modal-panel .form-input,
+.modal-panel .control-shell {
+    min-height: 3.35rem;
+}
+
+.modal-panel textarea.form-input {
+    min-height: 7.5rem;
+}
+
+.allocationPreview,
+#allocationPreview,
+.details-shell,
+#detailsContent {
+    position: relative;
+}
+
+.table-shell {
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.018)),
+        rgba(15, 23, 42, 0.7) !important;
+}
+
+table tbody tr,
+.allocation-table tbody tr {
+    transition:
+        background-color var(--erp-transition),
+        transform var(--erp-transition),
+        box-shadow var(--erp-transition),
+        border-color var(--erp-transition);
+}
+
+table tbody tr:nth-child(odd),
+.allocation-table tbody tr:nth-child(odd) {
+    background: rgba(255, 255, 255, 0.015);
+}
+
+table tbody tr:hover,
+.allocation-table tbody tr:hover {
+    background: rgba(34, 211, 238, 0.08) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.03),
+        inset 3px 0 0 rgba(34, 211, 238, 0.4);
+    transform: translateX(2px);
+}
+
+table td,
+table th,
+.allocation-table td,
+.allocation-table th {
+    vertical-align: middle;
+}
+
+.status-badge,
+.table-meta-pill,
+.entity-badge {
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 12px 22px rgba(2, 6, 23, 0.18);
+    backdrop-filter: blur(14px);
+}
+
+.status-badge {
+    padding-inline: 0.9rem;
+    min-height: 2rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.status-available,
+.status-active,
+.status-paid {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.18), rgba(16, 185, 129, 0.14)) !important;
+    border-color: rgba(74, 222, 128, 0.22) !important;
+    color: #bbf7d0 !important;
+}
+
+.status-occupied,
+.status-pending,
+.status-under-maintenance,
+.status-under-maintenance,
+.status-overdue {
+    background: linear-gradient(135deg, rgba(250, 204, 21, 0.18), rgba(245, 158, 11, 0.14)) !important;
+    border-color: rgba(250, 204, 21, 0.24) !important;
+    color: #fde68a !important;
+}
+
+.status-vacated,
+.status-unpaid,
+.status-suspended {
+    background: linear-gradient(135deg, rgba(248, 113, 113, 0.18), rgba(244, 63, 94, 0.14)) !important;
+    border-color: rgba(248, 113, 113, 0.22) !important;
+    color: #fecaca !important;
+}
+
+.status-under-maintenance,
+.status-pending {
+    box-shadow: 0 0 22px rgba(245, 158, 11, 0.08);
+}
+
+.status-available,
+.status-active,
+.status-paid {
+    box-shadow: 0 0 22px rgba(16, 185, 129, 0.08);
+}
+
+.status-vacated,
+.status-unpaid,
+.status-suspended {
+    box-shadow: 0 0 22px rgba(244, 63, 94, 0.08);
+}
+
+.page-enter {
+    animation: erpFadeUp 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.summary-value,
+.details-stat-value,
+.preview-value {
+    letter-spacing: -0.03em;
+}
+
+.mobile-card .action-row,
+.table-shell .action-row {
+    gap: 0.55rem !important;
+    align-items: center;
+}
+
+.table-shell button,
+.mobile-card button,
+.modal-panel button,
+.nav-shell button,
+.topbar-shell button {
+    cursor: pointer;
+}
+
+.search-icon,
+.field-icon,
+.nav-icon {
+    filter: drop-shadow(0 4px 10px rgba(34, 211, 238, 0.12));
+}
+
+.login-card {
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.025)),
+        rgba(15, 23, 42, 0.76) !important;
+    box-shadow: 0 36px 90px rgba(2, 6, 23, 0.55), 0 0 30px rgba(34, 211, 238, 0.1);
+}
+
+.login-button {
+    background: var(--erp-primary) !important;
+}
+
+@keyframes erpFadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes erpModalUp {
+    from {
+        opacity: 0;
+        transform: translateY(18px) scale(0.985);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes erpFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@media (max-width: 1024px) {
+    .main-shell,
+    main.main-shell {
+        max-width: 100%;
+    }
+
+    .modal-panel {
+        border-radius: 1.35rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .nav-shell,
+    .topbar-shell,
+    .summary-card,
+    .stat-card,
+    .panel-card,
+    .table-shell,
+    .room-card,
+    .hostel-card,
+    .mobile-card,
+    .modal-panel {
+        border-radius: 1.25rem;
+    }
+
+    .summary-card,
+    .stat-card,
+    .panel-card,
+    .room-card,
+    .hostel-card,
+    .mobile-card {
+        box-shadow: 0 18px 40px rgba(2, 6, 23, 0.28);
+    }
+
+    .modal-panel {
+        padding: 1.2rem !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+    }
+}

@@ -307,7 +307,17 @@ body {
     color: #fda4af;
 }
 
+.status-occupied {
+    background: rgba(244, 63, 94, 0.16);
+    color: #fda4af;
+}
+
 .status-maintenance {
+    background: rgba(245, 158, 11, 0.16);
+    color: #fde68a;
+}
+
+.status-under-maintenance {
     background: rgba(245, 158, 11, 0.16);
     color: #fde68a;
 }
@@ -396,6 +406,57 @@ body {
     box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.08);
 }
 
+.search-shell {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 3.25rem;
+    min-width: min(100%, 22rem);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.04);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.search-shell:focus-within {
+    border-color: rgba(103, 232, 249, 0.45);
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.08);
+}
+
+.search-icon {
+    flex-shrink: 0;
+    color: #67e8f9;
+}
+
+.search-input {
+    width: 100%;
+    background: transparent;
+}
+
+.search-input::placeholder {
+    color: #94a3b8;
+}
+
+.rooms-controls {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.rooms-control-select,
+.rooms-control-search,
+.rooms-control-button {
+    width: 100%;
+    min-width: 0;
+}
+
+.rooms-control-button {
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
 .detail-item {
     border-radius: 1rem;
     border: 1px solid rgba(255, 255, 255, 0.06);
@@ -480,6 +541,32 @@ body {
     .main-shell,
     .sidebar-collapsed .main-shell {
         margin-left: 0;
+    }
+}
+
+@media (max-width: 767px) {
+    .search-shell {
+        min-width: 100%;
+    }
+}
+
+@media (min-width: 768px) {
+    .rooms-controls {
+        display: grid;
+        grid-template-columns: minmax(180px, 0.95fr) minmax(260px, 1.35fr) auto;
+        align-items: center;
+    }
+
+    .rooms-control-button {
+        width: auto;
+        justify-self: end;
+    }
+}
+
+@media (min-width: 1280px) {
+    .rooms-controls {
+        max-width: min(100%, 52rem);
+        margin-left: auto;
     }
 }
 

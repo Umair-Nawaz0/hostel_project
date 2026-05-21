@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../css/admin_css/rooms.css">
+    <link rel="stylesheet" href="../css/admin_css/erp-theme.css">
 </head>
 <body class="min-h-screen overflow-x-hidden bg-slate-950 text-slate-100">
     <div class="page-bg"></div>
@@ -23,8 +24,7 @@
             <a href="rooms.html" class="nav-item active"><span class="nav-icon">🛏️</span><span class="nav-label">Rooms</span></a>
             <a href="students.html" class="nav-item"><span class="nav-icon">🎓</span><span class="nav-label">Students</span></a>
             <a href="staff.html" class="nav-item"><span class="nav-icon">🧑‍💼</span><span class="nav-label">Staff</span></a>
-            <a href="complaints.html" class="nav-item"><span class="nav-icon">📣</span><span class="nav-label">Complaints</span></a>
-            <a href="maintenance.html" class="nav-item"><span class="nav-icon">🛠️</span><span class="nav-label">Maintenance</span></a>
+            <a href="allocations.html" class="nav-item"><span class="nav-icon">🧾</span><span class="nav-label">Allocations</span></a>
             <a href="payments.html" class="nav-item"><span class="nav-icon">💳</span><span class="nav-label">Payments</span></a>
         </nav>
         <a href="login.html" class="nav-item logout-item mt-8"><span class="nav-icon">↩</span><span class="nav-label">Logout</span></a>
@@ -42,8 +42,7 @@
                 <a href="rooms.html" class="desktop-nav-link active">Rooms</a>
                 <a href="students.html" class="desktop-nav-link">Students</a>
                 <a href="staff.html" class="desktop-nav-link">Staff</a>
-                <a href="complaints.html" class="desktop-nav-link">Complaints</a>
-                <a href="maintenance.html" class="desktop-nav-link">Maintenance</a>
+                <a href="allocations.html" class="desktop-nav-link">Allocations</a>
                 <a href="payments.html" class="desktop-nav-link">Payments</a>
             </nav>
             <div class="flex items-center gap-3"><div class="header-avatar hidden sm:flex">AD</div><a href="login.html" class="header-action inline-flex">Logout</a></div>
@@ -54,13 +53,18 @@
                 <p class="text-sm uppercase tracking-[0.35em] text-cyan-200/70">Administration</p>
                 <h1 class="mt-2 text-2xl font-semibold text-white sm:text-3xl">Room Management</h1>
             </div>
-            <div class="flex w-full flex-col gap-3 md:flex-row xl:w-auto">
-                <select id="hostelFilter" class="control-shell rounded-2xl px-4 py-3 text-sm text-slate-100 outline-none">
-                    <option value="hostelA">Hostel A</option>
-                    <option value="hostelB">Hostel B</option>
-                    <option value="hostelC">Hostel C</option>
+            <div class="rooms-controls w-full">
+                <select id="hostelFilter" class="control-shell rooms-control-select rounded-2xl px-4 py-3 text-sm text-slate-100 outline-none">
+                    <option value="">All Hostels</option>
                 </select>
-                <button id="openRoomModal" type="button" class="add-btn rounded-2xl px-5 py-3 text-sm font-semibold text-white">+ Add Room</button>
+                <div class="search-shell rooms-control-search rounded-2xl px-4 py-3">
+                    <svg class="search-icon h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="7"></circle>
+                        <path d="m20 20-3.5-3.5"></path>
+                    </svg>
+                    <input id="roomSearch" type="search" class="search-input text-sm text-slate-100 outline-none" placeholder="Search room number e.g. A-101, B-203, C-304" aria-label="Search room number">
+                </div>
+                <button id="openRoomModal" type="button" class="add-btn rooms-control-button rounded-2xl px-5 py-3 text-sm font-semibold text-white">+ Add Room</button>
             </div>
         </section>
 
@@ -79,11 +83,46 @@
             <div class="mb-5 flex items-center justify-between gap-4"><h2 id="modalTitle" class="text-xl font-semibold text-white">Add Room</h2><button type="button" data-close-room-modal class="text-2xl text-slate-400">×</button></div>
             <p id="formError" class="mb-4 hidden rounded-2xl border border-rose-400/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-200"></p>
             <form id="roomForm" class="grid gap-4 sm:grid-cols-2">
-                <div class="sm:col-span-2"><label class="form-label" for="hostelSelect">Hostel</label><select id="hostelSelect" class="form-input mt-2 w-full"></select></div>
-                <div><label class="form-label" for="roomNumber">Room Number</label><input id="roomNumber" class="form-input mt-2 w-full" type="text"></div>
-                <div><label class="form-label" for="roomCapacity">Capacity</label><input id="roomCapacity" class="form-input mt-2 w-full" type="number" min="1"></div>
-                <div><label class="form-label" for="occupiedCount">Occupied Beds</label><input id="occupiedCount" class="form-input mt-2 w-full" type="number" min="0"></div>
-                <div><label class="form-label" for="roomStatus">Status</label><select id="roomStatus" class="form-input mt-2 w-full"><option>Available</option><option>Full</option><option>Maintenance</option></select></div>
+                <div class="sm:col-span-2">
+                    <label class="form-label" for="hostelSelect">Hostel <span class="text-rose-300">*</span></label>
+                    <select id="hostelSelect" class="form-input mt-2 w-full" required></select>
+                    <p id="hostelSelectError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+                <div>
+                    <label class="form-label" for="roomNumber">Room Number <span class="text-rose-300">*</span></label>
+                    <input id="roomNumber" class="form-input mt-2 w-full" type="text" maxlength="10" placeholder="A-101" required>
+                    <p class="mt-2 text-xs text-slate-400">Format: A-101, B-203, C-304</p>
+                    <p id="roomNumberError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+                <div>
+                    <label class="form-label" for="roomFloor">Floor <span class="text-rose-300">*</span></label>
+                    <input id="roomFloor" class="form-input mt-2 w-full" type="number" min="0" step="1" placeholder="0" required>
+                    <p id="roomFloorError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+                <div>
+                    <label class="form-label" for="roomType">Room Type</label>
+                    <select id="roomType" class="form-input mt-2 w-full">
+                        <option value="">No Room Type</option>
+                    </select>
+                    <p id="roomTypeError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+                <div>
+                    <label class="form-label" for="roomCapacity">Capacity <span class="text-rose-300">*</span></label>
+                    <input id="roomCapacity" class="form-input mt-2 w-full" type="number" min="1" step="1" required>
+                    <p id="roomCapacityError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+                <div>
+                    <label class="form-label" for="monthlyFee">Monthly Fee <span class="text-rose-300">*</span></label>
+                    <input id="monthlyFee" class="form-input mt-2 w-full" type="number" min="0" step="0.01" required>
+                    <p id="monthlyFeeError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+                <div>
+                    <label class="form-label" for="roomStatus">Status <span class="text-rose-300">*</span></label>
+                    <select id="roomStatus" class="form-input mt-2 w-full" required>
+                        <option value="">Select Status</option>
+                    </select>
+                    <p id="roomStatusError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
                 <div class="sm:col-span-2 flex justify-end gap-3 pt-2"><button type="button" data-close-room-modal class="rounded-2xl border border-white/10 px-5 py-3 text-sm text-slate-200">Cancel</button><button type="submit" class="add-btn rounded-2xl px-5 py-3 text-sm font-semibold text-white">Save</button></div>
             </form>
         </div>

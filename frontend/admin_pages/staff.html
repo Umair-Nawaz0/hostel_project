@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../css/admin_css/staff.css">
+    <link rel="stylesheet" href="../css/admin_css/erp-theme.css">
 </head>
 <body class="min-h-screen overflow-x-hidden bg-slate-950 text-slate-100">
     <div class="page-bg"></div>
@@ -23,8 +24,7 @@
             <a href="rooms.html" class="nav-item"><span class="nav-icon">🛏️</span><span class="nav-label">Rooms</span></a>
             <a href="students.html" class="nav-item"><span class="nav-icon">🎓</span><span class="nav-label">Students</span></a>
             <a href="staff.html" class="nav-item active"><span class="nav-icon">🧑‍💼</span><span class="nav-label">Staff</span></a>
-            <a href="complaints.html" class="nav-item"><span class="nav-icon">📣</span><span class="nav-label">Complaints</span></a>
-            <a href="maintenance.html" class="nav-item"><span class="nav-icon">🛠️</span><span class="nav-label">Maintenance</span></a>
+            <a href="allocations.html" class="nav-item"><span class="nav-icon">🧾</span><span class="nav-label">Allocations</span></a>
             <a href="payments.html" class="nav-item"><span class="nav-icon">💳</span><span class="nav-label">Payments</span></a>
         </nav>
         <a href="login.html" class="nav-item logout-item mt-8"><span class="nav-icon">↩</span><span class="nav-label">Logout</span></a>
@@ -42,85 +42,172 @@
                 <a href="rooms.html" class="desktop-nav-link">Rooms</a>
                 <a href="students.html" class="desktop-nav-link">Students</a>
                 <a href="staff.html" class="desktop-nav-link active">Staff</a>
-                <a href="complaints.html" class="desktop-nav-link">Complaints</a>
-                <a href="maintenance.html" class="desktop-nav-link">Maintenance</a>
+                <a href="allocations.html" class="desktop-nav-link">Allocations</a>
                 <a href="payments.html" class="desktop-nav-link">Payments</a>
             </nav>
             <div class="flex items-center gap-3"><div class="header-avatar hidden sm:flex">AD</div><a href="login.html" class="header-action inline-flex">Logout</a></div>
         </header>
 
         <section class="topbar-shell page-enter mb-6 flex flex-col gap-4 px-4 py-5 sm:px-6">
-            <div class="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-                <div>
-                    <p class="text-sm uppercase tracking-[0.35em] text-cyan-200/70">Administration</p>
-                    <h1 class="mt-2 text-2xl font-semibold text-white sm:text-3xl">Staff Management</h1>
+            <div class="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-sm uppercase tracking-[0.35em] text-cyan-200/70">Administration</p>
+                        <h1 class="mt-2 text-2xl font-semibold text-white sm:text-3xl">Staff Management</h1>
+                    </div>
                 </div>
-                <div class="flex w-full flex-col gap-3 md:flex-row xl:w-auto">
-                    <select id="hostelFilter" class="control-shell rounded-2xl px-4 py-3 text-sm text-slate-100 outline-none"></select>
-                    <select id="roleFilter" class="control-shell rounded-2xl px-4 py-3 text-sm text-slate-100 outline-none">
-                        <option value="All">All Roles</option>
-                        <option value="Warden">Warden</option>
-                        <option value="Staff">Staff</option>
+
+                <div class="staff-controls">
+                    <select id="hostelFilter" class="control-shell staff-control-select rounded-2xl px-4 py-3 text-sm text-slate-100 outline-none">
+                        <option value="">All Hostels</option>
                     </select>
-                    <button id="openStaffModal" type="button" class="add-btn rounded-2xl px-5 py-3 text-sm font-semibold text-white">+ Add Staff</button>
+                    <div class="search-shell staff-control-search rounded-2xl px-4 py-3">
+                        <svg class="search-icon h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="7"></circle>
+                            <path d="m20 20-3.5-3.5"></path>
+                        </svg>
+                        <input id="staffSearch" type="search" class="search-input text-sm text-slate-100 outline-none" placeholder="Search name, phone, or email" aria-label="Search staff">
+                    </div>
+                    <button id="openStaffModal" type="button" class="add-btn staff-control-button rounded-2xl px-5 py-3 text-sm font-semibold text-white">+ Add Staff</button>
+                    <button id="openWardenModal" type="button" class="secondary-btn staff-control-button rounded-2xl px-5 py-3 text-sm font-semibold text-white">+ Add Warden</button>
                 </div>
             </div>
         </section>
 
         <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <article class="summary-card p-5"><p class="summary-label">Filtered Staff</p><p id="filteredStaff" class="summary-value">0</p></article>
-            <article class="summary-card p-5"><p class="summary-label">Active Staff</p><p id="activeStaff" class="summary-value">0</p></article>
-            <article class="summary-card p-5"><p class="summary-label">Selected Hostel</p><p id="selectedHostelName" class="summary-value text-lg">Hostel A</p></article>
-            <article class="summary-card p-5"><p class="summary-label">Selected Role</p><p id="selectedRoleName" class="summary-value text-lg">All</p></article>
+            <article class="summary-card p-5"><p class="summary-label">Visible Records</p><p id="visibleCount" class="summary-value">0</p></article>
+            <article class="summary-card p-5"><p class="summary-label">Wardens</p><p id="wardenCount" class="summary-value">0</p></article>
+            <article class="summary-card p-5"><p class="summary-label">Other Staff</p><p id="staffCount" class="summary-value">0</p></article>
+            <article class="summary-card p-5"><p class="summary-label">Monthly Payroll</p><p id="payrollTotal" class="summary-value text-xl">PKR 0</p></article>
+        </section>
+
+        <p id="pageMessage" class="mt-4 hidden rounded-2xl border px-4 py-3 text-sm"></p>
+
+        <section class="table-shell mt-6 overflow-hidden">
+            <div class="section-header flex flex-col gap-4 border-b border-white/8 px-4 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+                <h2 class="text-xl font-semibold text-white">Wardens</h2>
+                <span id="selectedHostelLabel" class="table-meta-pill">All Hostels</span>
+            </div>
+
+            <div class="hidden overflow-x-auto lg:block">
+                <table class="staff-table min-w-full">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>CNIC</th>
+                            <th class="text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="wardenTable"></tbody>
+                </table>
+            </div>
+
+            <div id="wardenCards" class="grid gap-4 p-4 lg:hidden"></div>
         </section>
 
         <section class="table-shell mt-6 overflow-hidden">
-            <div class="table-wrap overflow-x-auto">
-                <table class="min-w-full text-left">
-                    <thead class="border-b border-white/10 text-xs uppercase tracking-[0.25em] text-slate-400">
+            <div class="section-header flex flex-col gap-4 border-b border-white/8 px-4 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+                <h2 class="text-xl font-semibold text-white">Other Staff</h2>
+                <span id="staffSectionCount" class="table-meta-pill">0 Records</span>
+            </div>
+
+            <div class="hidden overflow-x-auto lg:block">
+                <table class="staff-table min-w-full">
+                    <thead>
                         <tr>
-                            <th class="px-4 py-4">Name</th>
-                            <th class="px-4 py-4">Email</th>
-                            <th class="px-4 py-4">Phone</th>
-                            <th class="px-4 py-4">Role</th>
-                            <th class="px-4 py-4">Hostel</th>
-                            <th class="px-4 py-4">Status</th>
-                            <th class="px-4 py-4">Actions</th>
+                            <th>Name</th>
+                            <th>Role</th>
+                            <th>Salary</th>
+                            <th>Hostel</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th class="text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="staffTable"></tbody>
                 </table>
             </div>
+
+            <div id="staffCards" class="grid gap-4 p-4 lg:hidden"></div>
         </section>
     </main>
 
-    <div id="staffModal" class="modal-backdrop hidden z-50 flex items-center justify-center p-4">
+    <div id="memberModal" class="modal-backdrop hidden z-50 flex items-center justify-center p-4">
         <div class="modal-panel w-full max-w-3xl p-6">
-            <div class="mb-5 flex items-center justify-between gap-4"><h2 id="modalTitle" class="text-xl font-semibold text-white">Add Staff</h2><button type="button" data-close-staff-modal class="text-2xl text-slate-400">×</button></div>
+            <div class="mb-5 flex items-center justify-between gap-4">
+                <div class="space-y-2">
+                    <span id="memberTypeBadge" class="entity-badge">Staff</span>
+                    <h2 id="modalTitle" class="text-xl font-semibold text-white">Add Staff</h2>
+                </div>
+                <button type="button" data-close-member-modal class="text-2xl text-slate-400">×</button>
+            </div>
             <p id="formError" class="mb-4 hidden rounded-2xl border border-rose-400/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-200"></p>
-            <form id="staffForm" class="grid gap-4 sm:grid-cols-2">
-                <div><label class="form-label" for="staffName">Name</label><input id="staffName" class="form-input mt-2 w-full" type="text"></div>
-                <div><label class="form-label" for="staffEmail">Email</label><input id="staffEmail" class="form-input mt-2 w-full" type="email"></div>
-                <div><label class="form-label" for="staffPhone">Phone</label><input id="staffPhone" class="form-input mt-2 w-full" type="text"></div>
-                <div><label class="form-label" for="staffRole">Role</label><select id="staffRole" class="form-input mt-2 w-full"><option>Warden</option><option>Staff</option></select></div>
-                <div><label class="form-label" for="staffHostel">Hostel</label><select id="staffHostel" class="form-input mt-2 w-full"></select></div>
-                <div><label class="form-label" for="staffSalary">Salary</label><input id="staffSalary" class="form-input mt-2 w-full" type="number" min="0"></div>
-                <div class="sm:col-span-2"><label class="form-label" for="staffStatus">Status</label><select id="staffStatus" class="form-input mt-2 w-full"><option>Active</option><option>Inactive</option></select></div>
-                <div class="sm:col-span-2 flex justify-end gap-3 pt-2"><button type="button" data-close-staff-modal class="rounded-2xl border border-white/10 px-5 py-3 text-sm text-slate-200">Cancel</button><button type="submit" class="add-btn rounded-2xl px-5 py-3 text-sm font-semibold text-white">Save</button></div>
+
+            <form id="memberForm" class="grid gap-4 sm:grid-cols-2">
+                <input id="memberType" type="hidden" value="staff">
+
+                <div>
+                    <label class="form-label" for="fullName">Full Name <span class="text-rose-300">*</span></label>
+                    <input id="fullName" class="form-input mt-2 w-full" type="text" maxlength="100" required>
+                    <p id="fullNameError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+
+                <div class="staff-only">
+                    <label class="form-label" for="role">Role <span class="text-rose-300">*</span></label>
+                    <input id="role" class="form-input mt-2 w-full" type="text" maxlength="60" required>
+                    <p id="roleError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+
+                <div>
+                    <label class="form-label" for="phone">Phone <span class="text-rose-300">*</span></label>
+                    <input id="phone" class="form-input mt-2 w-full" type="text" maxlength="20" required>
+                    <p id="phoneError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+
+                <div>
+                    <label id="emailLabel" class="form-label" for="email">Email</label>
+                    <input id="email" class="form-input mt-2 w-full" type="email" maxlength="100">
+                    <p id="emailError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+
+                <div class="staff-only">
+                    <label class="form-label" for="salary">Salary <span class="text-rose-300">*</span></label>
+                    <input id="salary" class="form-input mt-2 w-full" type="number" min="0" step="0.01" required>
+                    <p id="salaryError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+
+                <div class="staff-only">
+                    <label class="form-label" for="hostelSelect">Hostel <span class="text-rose-300">*</span></label>
+                    <select id="hostelSelect" class="form-input mt-2 w-full" required></select>
+                    <p id="hostelSelectError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+
+                <div class="warden-only hidden sm:col-span-2">
+                    <label class="form-label" for="cnic">CNIC <span class="text-rose-300">*</span></label>
+                    <input id="cnic" class="form-input mt-2 w-full" type="text" maxlength="15" placeholder="35202-1234567-1">
+                    <p id="cnicError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+
+                <div class="sm:col-span-2 flex justify-end gap-3 pt-2">
+                    <button type="button" data-close-member-modal class="rounded-2xl border border-white/10 px-5 py-3 text-sm text-slate-200">Cancel</button>
+                    <button type="submit" class="add-btn rounded-2xl px-5 py-3 text-sm font-semibold text-white">Save</button>
+                </div>
             </form>
         </div>
     </div>
 
     <div id="detailsModal" class="modal-backdrop hidden z-50 flex items-center justify-center p-4">
-        <div class="modal-panel w-full max-w-2xl p-6">
-            <div class="mb-5 flex items-center justify-between gap-4"><h2 id="detailsTitle" class="text-xl font-semibold text-white">Staff Details</h2><button type="button" data-close-details class="text-2xl text-slate-400">×</button></div>
-            <div id="detailsContent" class="space-y-4"></div>
+        <div class="modal-panel w-full max-w-3xl p-6">
+            <div class="mb-5 flex items-center justify-between gap-4"><h2 id="detailsTitle" class="text-xl font-semibold text-white">Details</h2><button type="button" data-close-details class="text-2xl text-slate-400">×</button></div>
+            <div id="detailsContent" class="details-grid"></div>
         </div>
     </div>
 
     <div id="confirmModal" class="modal-backdrop hidden z-50 flex items-center justify-center p-4">
         <div class="modal-panel w-full max-w-md p-6 text-center">
-            <h2 class="text-xl font-semibold text-white">Delete Staff Member</h2>
+            <h2 id="confirmTitle" class="text-xl font-semibold text-white">Delete Record</h2>
             <p id="confirmText" class="mt-3 text-sm text-slate-300"></p>
             <div class="mt-6 flex justify-center gap-3"><button type="button" data-close-confirm class="rounded-2xl border border-white/10 px-5 py-3 text-sm text-slate-200">Cancel</button><button id="confirmDelete" type="button" class="delete-btn rounded-2xl px-5 py-3 text-sm font-semibold text-white">Delete</button></div>
         </div>

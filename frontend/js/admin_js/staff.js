@@ -1,410 +1,748 @@
+const API = {
+    hostels: "http://localhost:5000/api/hostels",
+    staff: "http://localhost:5000/api/staff",
+    wardens: "http://localhost:5000/api/wardens"
+};
+
 const body = document.body;
 const mobileMenuButton = document.getElementById("mobileMenuButton");
 const mobileOverlay = document.getElementById("mobileOverlay");
-
 const hostelFilter = document.getElementById("hostelFilter");
-const roleFilter = document.getElementById("roleFilter");
+const staffSearchInput = document.getElementById("staffSearch");
+const visibleCountEl = document.getElementById("visibleCount");
+const wardenCountEl = document.getElementById("wardenCount");
+const staffCountEl = document.getElementById("staffCount");
+const payrollTotalEl = document.getElementById("payrollTotal");
+const selectedHostelLabelEl = document.getElementById("selectedHostelLabel");
+const staffSectionCountEl = document.getElementById("staffSectionCount");
+const pageMessage = document.getElementById("pageMessage");
+const wardenTable = document.getElementById("wardenTable");
+const wardenCards = document.getElementById("wardenCards");
 const staffTable = document.getElementById("staffTable");
-
-const filteredStaffEl = document.getElementById("filteredStaff");
-const activeStaffEl = document.getElementById("activeStaff");
-const selectedHostelNameEl = document.getElementById("selectedHostelName");
-const selectedRoleNameEl = document.getElementById("selectedRoleName");
-
+const staffCards = document.getElementById("staffCards");
 const openStaffModalButton = document.getElementById("openStaffModal");
-const staffModal = document.getElementById("staffModal");
-const detailsModal = document.getElementById("detailsModal");
-const confirmModal = document.getElementById("confirmModal");
-const staffForm = document.getElementById("staffForm");
+const openWardenModalButton = document.getElementById("openWardenModal");
+
+const memberModal = document.getElementById("memberModal");
+const memberForm = document.getElementById("memberForm");
+const memberTypeInput = document.getElementById("memberType");
+const memberTypeBadge = document.getElementById("memberTypeBadge");
 const modalTitle = document.getElementById("modalTitle");
 const formError = document.getElementById("formError");
+const fullNameInput = document.getElementById("fullName");
+const roleInput = document.getElementById("role");
+const phoneInput = document.getElementById("phone");
+const emailInput = document.getElementById("email");
+const emailLabel = document.getElementById("emailLabel");
+const salaryInput = document.getElementById("salary");
+const hostelSelect = document.getElementById("hostelSelect");
+const cnicInput = document.getElementById("cnic");
+const staffOnlyFields = [...document.querySelectorAll(".staff-only")];
+const wardenOnlyFields = [...document.querySelectorAll(".warden-only")];
 
-const staffNameInput = document.getElementById("staffName");
-const staffEmailInput = document.getElementById("staffEmail");
-const staffPhoneInput = document.getElementById("staffPhone");
-const staffRoleInput = document.getElementById("staffRole");
-const staffHostelInput = document.getElementById("staffHostel");
-const staffSalaryInput = document.getElementById("staffSalary");
-const staffStatusInput = document.getElementById("staffStatus");
-
+const detailsModal = document.getElementById("detailsModal");
 const detailsTitle = document.getElementById("detailsTitle");
 const detailsContent = document.getElementById("detailsContent");
+
+const confirmModal = document.getElementById("confirmModal");
+const confirmTitle = document.getElementById("confirmTitle");
 const confirmText = document.getElementById("confirmText");
 const confirmDeleteButton = document.getElementById("confirmDelete");
 
-const hostels = [
-    { id: "hostelA", name: "Hostel A" },
-    { id: "hostelB", name: "Hostel B" },
-    { id: "hostelC", name: "Hostel C" }
-];
+const fieldMap = {
+    full_name: { input: fullNameInput, error: document.getElementById("fullNameError") },
+    role: { input: roleInput, error: document.getElementById("roleError") },
+    phone: { input: phoneInput, error: document.getElementById("phoneError") },
+    email: { input: emailInput, error: document.getElementById("emailError") },
+    salary: { input: salaryInput, error: document.getElementById("salaryError") },
+    hostel_id: { input: hostelSelect, error: document.getElementById("hostelSelectError") },
+    cnic: { input: cnicInput, error: document.getElementById("cnicError") }
+};
 
-let staffMembers = [
-    {
-        id: 1,
-        name: "Ayesha Malik",
-        email: "ayesha.malik@example.com",
-        phone: "+92 300 7788990",
-        role: "Warden",
-        hostelId: "hostelA",
-        salary: 85000,
-        status: "Active"
-    },
-    {
-        id: 2,
-        name: "Bilal Hussain",
-        email: "bilal.hussain@example.com",
-        phone: "+92 302 1119988",
-        role: "Staff",
-        hostelId: "hostelA",
-        salary: 52000,
-        status: "Active"
-    },
-    {
-        id: 3,
-        name: "Hamza Rauf",
-        email: "hamza.rauf@example.com",
-        phone: "+92 301 6655443",
-        role: "Warden",
-        hostelId: "hostelB",
-        salary: 90000,
-        status: "Inactive"
-    },
-    {
-        id: 4,
-        name: "Sana Ahmed",
-        email: "sana.ahmed@example.com",
-        phone: "+92 333 4422110",
-        role: "Staff",
-        hostelId: "hostelB",
-        salary: 48000,
-        status: "Active"
-    },
-    {
-        id: 5,
-        name: "Omar Khan",
-        email: "omar.khan@example.com",
-        phone: "+92 300 1238877",
-        role: "Staff",
-        hostelId: "hostelC",
-        salary: 46000,
-        status: "Active"
-    }
-];
+let hostels = [];
+let staffRecords = [];
+let wardenRecords = [];
+let visibleStaffRecords = [];
+let visibleWardenRecords = [];
+let selectedHostelId = "";
+let searchTerm = "";
+let editState = null;
+let deleteState = null;
+let messageTimeoutId = null;
+let loadRequestId = 0;
 
-let selectedHostelId = hostels[0].id;
-let selectedRole = "All";
-let editId = null;
-let deleteId = null;
-
-function openMobileSidebar() {
-    body.classList.add("sidebar-open");
-    mobileOverlay.classList.add("active");
-}
-
-function closeMobileSidebar() {
-    body.classList.remove("sidebar-open");
-    mobileOverlay.classList.remove("active");
-}
-
-function toggleSidebar() {
-    if (body.classList.contains("sidebar-open")) {
-        closeMobileSidebar();
-    } else {
-        openMobileSidebar();
-    }
-}
-
-function handleResize() {
-    closeMobileSidebar();
-}
-
-function populateHostelOptions() {
-    const options = hostels.map((hostel) => `<option value="${hostel.id}">${hostel.name}</option>`).join("");
-    hostelFilter.innerHTML = options;
-    staffHostelInput.innerHTML = options;
-    hostelFilter.value = selectedHostelId;
-    staffHostelInput.value = selectedHostelId;
-}
-
-function getHostelName(hostelId) {
-    return hostels.find((hostel) => hostel.id === hostelId)?.name || "Unknown Hostel";
-}
-
-function getFilteredStaff() {
-    return staffMembers.filter((member) => {
-        const matchesHostel = member.hostelId === selectedHostelId;
-        const matchesRole = selectedRole === "All" || member.role === selectedRole;
-        return matchesHostel && matchesRole;
+const request = async (url, options = {}) => {
+    const response = await fetch(url, {
+        headers: { "Content-Type": "application/json", ...(options.headers || {}) },
+        ...options
     });
-}
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) {
+        const validationMessage = Array.isArray(payload.errors) && payload.errors.length
+            ? payload.errors.map((error) => error.message).join(" ")
+            : null;
+        throw new Error(validationMessage || payload.message || "Request failed.");
+    }
+    return payload;
+};
 
-function animateCounter(element, target) {
-    const start = Number(element.textContent.replace(/,/g, "")) || 0;
+const animateCounter = (element, target) => {
+    const numericText = String(element.textContent).replace(/[^\d]/g, "");
+    const start = Number(numericText) || 0;
     const startTime = performance.now();
     const duration = 700;
 
-    function update(currentTime) {
+    const update = (currentTime) => {
         const progress = Math.min((currentTime - startTime) / duration, 1);
         const eased = 1 - Math.pow(1 - progress, 3);
-        const value = Math.round(start + (target - start) * eased);
-        element.textContent = value.toLocaleString();
-
+        element.textContent = Math.round(start + (target - start) * eased).toLocaleString();
         if (progress < 1) {
             requestAnimationFrame(update);
         }
-    }
+    };
 
     requestAnimationFrame(update);
-}
+};
 
-function updateSummary(filteredStaff) {
-    const activeCount = filteredStaff.filter((member) => member.status === "Active").length;
-    animateCounter(filteredStaffEl, filteredStaff.length);
-    animateCounter(activeStaffEl, activeCount);
-    selectedHostelNameEl.textContent = getHostelName(selectedHostelId);
-    selectedRoleNameEl.textContent = selectedRole;
-}
+const formatCurrency = (value) => `PKR ${Math.round(Number(value) || 0).toLocaleString()}`;
 
-function renderStaff() {
-    const filteredStaff = getFilteredStaff();
-    staffTable.innerHTML = "";
+const safeText = (value, fallback = "Not Available") => {
+    const normalized = typeof value === "string" ? value.trim() : value;
+    return normalized ? normalized : fallback;
+};
 
-    filteredStaff.forEach((member) => {
-        const roleClass = member.role.toLowerCase();
-        const statusClass = member.status.toLowerCase();
-        const row = document.createElement("tr");
-        row.innerHTML = `
-            <td data-label="Name" class="font-semibold text-white">${member.name}</td>
-            <td data-label="Email">${member.email}</td>
-            <td data-label="Phone">${member.phone}</td>
-            <td data-label="Role"><span class="role-badge role-${roleClass}">${member.role}</span></td>
-            <td data-label="Hostel">${getHostelName(member.hostelId)}</td>
-            <td data-label="Status"><span class="status-badge status-${statusClass}">${member.status}</span></td>
-            <td data-label="Actions" class="actions-cell">
-                <div class="row-actions">
-                    <button class="action-btn" data-action="view" data-id="${member.id}" title="View staff" aria-label="View staff">
-                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                    </button>
-                    <button class="action-btn" data-action="edit" data-id="${member.id}" title="Edit staff" aria-label="Edit staff">
-                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>
-                    </button>
-                    <button class="action-btn" data-action="delete" data-id="${member.id}" title="Delete staff" aria-label="Delete staff">
-                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path></svg>
-                    </button>
-                </div>
-            </td>
-        `;
+const escapeHtml = (value) => String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 
-        staffTable.appendChild(row);
-    });
+const normalizeSearchTerm = (value) => typeof value === "string"
+    ? value.trim().replace(/\s+/g, " ").toLowerCase()
+    : "";
 
-    updateSummary(filteredStaff);
-}
+const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+const isValidPhone = (value) => /^[+0-9()\-\s]{7,20}$/.test(value);
+const isValidCnic = (value) => /^\d{5}-?\d{7}-?\d$/.test(value);
 
-function resetForm() {
-    staffForm.reset();
-    formError.textContent = "";
-    editId = null;
-    staffHostelInput.value = selectedHostelId;
-    staffRoleInput.value = "Warden";
-    staffStatusInput.value = "Active";
-}
+const setFormError = (message) => {
+    formError.textContent = message;
+    formError.classList.toggle("hidden", !message);
+};
 
-function openFormModal(mode, member = null) {
-    resetForm();
-    modalTitle.textContent = mode === "edit" ? "Edit Staff" : "Add Staff";
-
-    if (mode === "edit" && member) {
-        staffNameInput.value = member.name;
-        staffEmailInput.value = member.email;
-        staffPhoneInput.value = member.phone;
-        staffRoleInput.value = member.role;
-        staffHostelInput.value = member.hostelId;
-        staffSalaryInput.value = member.salary;
-        staffStatusInput.value = member.status;
-        editId = member.id;
+const showPageMessage = (message, type = "success") => {
+    if (messageTimeoutId) {
+        window.clearTimeout(messageTimeoutId);
+        messageTimeoutId = null;
     }
 
-    staffModal.classList.remove("hidden");
-}
-
-function closeFormModal() {
-    staffModal.classList.add("hidden");
-    resetForm();
-}
-
-function openDetailsModal(member) {
-    detailsTitle.textContent = member.name;
-    detailsContent.innerHTML = `
-        <div class="detail-item"><p class="detail-label">Name</p><p class="detail-value">${member.name}</p></div>
-        <div class="detail-item"><p class="detail-label">Email</p><p class="detail-value">${member.email}</p></div>
-        <div class="detail-item"><p class="detail-label">Phone</p><p class="detail-value">${member.phone}</p></div>
-        <div class="detail-item"><p class="detail-label">Role</p><p class="detail-value">${member.role}</p></div>
-        <div class="detail-item"><p class="detail-label">Hostel</p><p class="detail-value">${getHostelName(member.hostelId)}</p></div>
-        <div class="detail-item"><p class="detail-label">Status</p><p class="detail-value">${member.status}</p></div>
-        <div class="detail-item sm:col-span-2"><p class="detail-label">Salary</p><p class="detail-value">PKR ${Number(member.salary).toLocaleString()}</p></div>
-    `;
-    detailsModal.classList.remove("hidden");
-}
-
-function closeDetailsModal() {
-    detailsModal.classList.add("hidden");
-}
-
-function openConfirmModal(member) {
-    deleteId = member.id;
-    confirmText.textContent = `This will remove ${member.name} from ${getHostelName(member.hostelId)}.`;
-    confirmModal.classList.remove("hidden");
-}
-
-function closeConfirmModal() {
-    deleteId = null;
-    confirmModal.classList.add("hidden");
-}
-
-function validateForm() {
-    const name = staffNameInput.value.trim();
-    const email = staffEmailInput.value.trim();
-    const phone = staffPhoneInput.value.trim();
-    const salaryRaw = staffSalaryInput.value.trim();
-
-    if (!name || !email || !phone || !staffRoleInput.value || !staffHostelInput.value || !salaryRaw || !staffStatusInput.value) {
-        return "All fields are required.";
+    pageMessage.textContent = message;
+    pageMessage.className = "mt-4 rounded-2xl border px-4 py-3 text-sm";
+    if (type === "success") {
+        pageMessage.classList.add("border-emerald-400/30", "bg-emerald-500/10", "text-emerald-200");
+    } else {
+        pageMessage.classList.add("border-rose-400/30", "bg-rose-500/10", "text-rose-200");
     }
 
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(email)) {
-        return "Enter a valid email address.";
-    }
+    pageMessage.classList.remove("hidden");
+    messageTimeoutId = window.setTimeout(() => pageMessage.classList.add("hidden"), 4000);
+};
 
-    if (Number(salaryRaw) < 0) {
-        return "Salary cannot be negative.";
-    }
-
-    return "";
-}
-
-hostelFilter.addEventListener("change", (event) => {
-    selectedHostelId = event.target.value;
-    renderStaff();
-});
-
-roleFilter.addEventListener("change", (event) => {
-    selectedRole = event.target.value;
-    renderStaff();
-});
-
-[staffNameInput, staffEmailInput, staffPhoneInput, staffRoleInput, staffHostelInput, staffSalaryInput, staffStatusInput].forEach((input) => {
-    input.addEventListener("input", () => {
-        formError.textContent = "";
-    });
-    input.addEventListener("change", () => {
-        formError.textContent = "";
-    });
-});
-
-staffForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-
-    const error = validateForm();
-    if (error) {
-        formError.textContent = error;
+const setFieldError = (field, message = "") => {
+    const config = fieldMap[field];
+    if (!config) {
         return;
     }
 
-    const record = {
-        id: editId || Date.now(),
-        name: staffNameInput.value.trim(),
-        email: staffEmailInput.value.trim(),
-        phone: staffPhoneInput.value.trim(),
-        role: staffRoleInput.value,
-        hostelId: staffHostelInput.value,
-        salary: Number(staffSalaryInput.value),
-        status: staffStatusInput.value
-    };
+    config.error.textContent = message;
+    config.error.classList.toggle("hidden", !message);
+    config.input.classList.toggle("border-rose-400/60", Boolean(message));
+    config.input.classList.toggle("ring-4", Boolean(message));
+    config.input.classList.toggle("ring-rose-500/10", Boolean(message));
+    config.input.setAttribute("aria-invalid", message ? "true" : "false");
+};
 
-    if (editId) {
-        staffMembers = staffMembers.map((member) => member.id === editId ? record : member);
-    } else {
-        staffMembers.unshift(record);
-    }
+const clearFieldErrors = () => {
+    Object.keys(fieldMap).forEach((field) => setFieldError(field, ""));
+};
 
-    selectedHostelId = record.hostelId;
-    selectedRole = "All";
-    hostelFilter.value = selectedHostelId;
-    roleFilter.value = selectedRole;
-    closeFormModal();
-    renderStaff();
+const normalizeHostel = (row) => ({
+    id: Number(row.hostel_id ?? row.id),
+    name: safeText(row.hostel_name || row.name, "Unnamed Hostel")
 });
 
-staffTable.addEventListener("click", (event) => {
+const normalizeStaffRecord = (row) => ({
+    id: Number(row.staff_id ?? row.id),
+    entityType: "staff",
+    fullName: safeText(row.full_name || row.name, "Unnamed Staff"),
+    role: safeText(row.role, "Staff"),
+    phone: safeText(row.phone),
+    email: row.email ? safeText(row.email) : null,
+    salary: Number(row.salary || 0),
+    hostelId: Number(row.hostel_id ?? row.hostelId),
+    hostelName: safeText(row.hostel_name || row.hostel, "Unassigned Hostel"),
+});
+
+const normalizeWardenRecord = (row) => ({
+    id: Number(row.warden_id ?? row.id),
+    entityType: "warden",
+    fullName: safeText(row.full_name || row.warden_name || row.name, "Unnamed Warden"),
+    phone: safeText(row.phone),
+    email: safeText(row.email),
+    hostelId: row.assigned_hostel_id ? Number(row.assigned_hostel_id) : (row.assignedHostelId ? Number(row.assignedHostelId) : null),
+    hostelName: safeText(row.assigned_hostel_name || row.assignedHostelName, "Not Assigned"),
+    cnic: safeText(row.cnic)
+});
+
+const openMobileSidebar = () => {
+    body.classList.add("sidebar-open");
+    mobileOverlay.classList.add("active");
+};
+
+const closeMobileSidebar = () => {
+    body.classList.remove("sidebar-open");
+    mobileOverlay.classList.remove("active");
+};
+
+const handleResize = () => closeMobileSidebar();
+
+const populateHostelOptions = () => {
+    hostelFilter.innerHTML = [`<option value="">All Hostels</option>`]
+        .concat(hostels.map((hostel) => `<option value="${hostel.id}">${escapeHtml(hostel.name)}</option>`))
+        .join("");
+    hostelSelect.innerHTML = hostels.map((hostel) => `<option value="${hostel.id}">${escapeHtml(hostel.name)}</option>`).join("");
+    hostelFilter.value = selectedHostelId;
+
+    if (!hostelSelect.value && hostels[0]) {
+        hostelSelect.value = String(hostels[0].id);
+    }
+};
+
+const applyFilters = () => {
+    const normalizedSearch = normalizeSearchTerm(searchTerm);
+    const selectedHostel = selectedHostelId ? Number(selectedHostelId) : null;
+    const matchesSearch = (record) => {
+        if (!normalizedSearch) {
+            return true;
+        }
+
+        const haystack = [
+            record.fullName,
+            record.phone,
+            record.email || "",
+        ].map((value) => normalizeSearchTerm(String(value)));
+
+        return haystack.some((value) => value.includes(normalizedSearch));
+    };
+
+    visibleWardenRecords = wardenRecords.filter((record) => {
+        if (selectedHostel && record.hostelId !== selectedHostel) {
+            return false;
+        }
+        return matchesSearch(record);
+    });
+
+    visibleStaffRecords = staffRecords.filter((record) => {
+        if (selectedHostel && record.hostelId !== selectedHostel) {
+            return false;
+        }
+        return matchesSearch(record);
+    });
+};
+
+const buildActionButtons = (record) => `
+    <button class="action-btn" data-action="view" data-type="${record.entityType}" data-id="${record.id}">View</button>
+    <button class="action-btn" data-action="edit" data-type="${record.entityType}" data-id="${record.id}">Edit</button>
+    <button class="action-btn" data-action="delete" data-type="${record.entityType}" data-id="${record.id}">Delete</button>
+`;
+
+const updateSummary = () => {
+    const payroll = visibleStaffRecords.reduce((total, record) => total + Number(record.salary || 0), 0);
+    const visibleRecords = visibleWardenRecords.length + visibleStaffRecords.length;
+
+    animateCounter(visibleCountEl, visibleRecords);
+    animateCounter(wardenCountEl, visibleWardenRecords.length);
+    animateCounter(staffCountEl, visibleStaffRecords.length);
+    payrollTotalEl.textContent = formatCurrency(payroll);
+    selectedHostelLabelEl.textContent = selectedHostelId
+        ? (hostels.find((hostel) => hostel.id === Number(selectedHostelId))?.name || "Unknown Hostel")
+        : "All Hostels";
+    staffSectionCountEl.textContent = `${visibleStaffRecords.length.toLocaleString()} Record${visibleStaffRecords.length === 1 ? "" : "s"}`;
+};
+
+const renderWardenSection = () => {
+    wardenTable.innerHTML = "";
+    wardenCards.innerHTML = "";
+
+    if (!visibleWardenRecords.length) {
+        wardenTable.innerHTML = `<tr><td colspan="5" class="px-6 py-10 text-center text-slate-400">${escapeHtml("No wardens match the current filters.")}</td></tr>`;
+        wardenCards.innerHTML = `<article class="mobile-card empty-state">${escapeHtml("No wardens match the current filters.")}</article>`;
+        return;
+    }
+
+    visibleWardenRecords.forEach((record) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>
+                <div class="record-title">${escapeHtml(record.fullName)}</div>
+                <div class="record-subtitle">Warden</div>
+            </td>
+            <td>${escapeHtml(record.email || "Not Available")}</td>
+            <td>${escapeHtml(record.phone)}</td>
+            <td>${escapeHtml(record.cnic || "N/A")}</td>
+            <td><div class="row-actions justify-end">${buildActionButtons(record)}</div></td>
+        `;
+        wardenTable.appendChild(row);
+
+        const card = document.createElement("article");
+        card.className = "mobile-card";
+        card.innerHTML = `
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <h3 class="text-xl font-semibold text-white">${escapeHtml(record.fullName)}</h3>
+                    <p class="mt-2 text-sm text-slate-300">Warden</p>
+                </div>
+                <span class="role-badge role-warden">Warden</span>
+            </div>
+            <div class="info-grid mt-5">
+                <div class="info-chip">
+                    <p class="info-chip-label">Email</p>
+                    <p class="info-chip-value">${escapeHtml(record.email || "Not Available")}</p>
+                </div>
+                <div class="info-chip">
+                    <p class="info-chip-label">Phone</p>
+                    <p class="info-chip-value">${escapeHtml(record.phone)}</p>
+                </div>
+                <div class="info-chip">
+                    <p class="info-chip-label">CNIC</p>
+                    <p class="info-chip-value">${escapeHtml(record.cnic || "N/A")}</p>
+                </div>
+            </div>
+            <div class="row-actions mt-5">${buildActionButtons(record)}</div>
+        `;
+        wardenCards.appendChild(card);
+    });
+};
+
+const renderStaffSection = () => {
+    staffTable.innerHTML = "";
+    staffCards.innerHTML = "";
+
+    if (!visibleStaffRecords.length) {
+        staffTable.innerHTML = `<tr><td colspan="7" class="px-6 py-10 text-center text-slate-400">${escapeHtml("No staff records match the current filters.")}</td></tr>`;
+        staffCards.innerHTML = `<article class="mobile-card empty-state">${escapeHtml("No staff records match the current filters.")}</article>`;
+        return;
+    }
+
+    visibleStaffRecords.forEach((record) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>
+                <div class="record-title">${escapeHtml(record.fullName)}</div>
+                <div class="record-subtitle">Staff</div>
+            </td>
+            <td>${escapeHtml(record.role)}</td>
+            <td>${escapeHtml(formatCurrency(record.salary))}</td>
+            <td>${escapeHtml(record.hostelName || "Not Assigned")}</td>
+            <td>${escapeHtml(record.phone)}</td>
+            <td>${escapeHtml(record.email || "Not Available")}</td>
+            <td><div class="row-actions justify-end">${buildActionButtons(record)}</div></td>
+        `;
+        staffTable.appendChild(row);
+
+        const card = document.createElement("article");
+        card.className = "mobile-card";
+        card.innerHTML = `
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-200/75">${escapeHtml(record.hostelName || "Not Assigned")}</p>
+                    <h3 class="mt-2 text-xl font-semibold text-white">${escapeHtml(record.fullName)}</h3>
+                    <p class="mt-2 text-sm text-slate-300">${escapeHtml(record.role)}</p>
+                </div>
+                <span class="role-badge role-staff">Staff</span>
+            </div>
+            <div class="info-grid mt-5">
+                <div class="info-chip">
+                    <p class="info-chip-label">Role</p>
+                    <p class="info-chip-value">${escapeHtml(record.role)}</p>
+                </div>
+                <div class="info-chip">
+                    <p class="info-chip-label">Salary</p>
+                    <p class="info-chip-value">${escapeHtml(formatCurrency(record.salary))}</p>
+                </div>
+                <div class="info-chip">
+                    <p class="info-chip-label">Phone</p>
+                    <p class="info-chip-value">${escapeHtml(record.phone)}</p>
+                </div>
+                <div class="info-chip">
+                    <p class="info-chip-label">Email</p>
+                    <p class="info-chip-value">${escapeHtml(record.email || "Not Available")}</p>
+                </div>
+            </div>
+            <div class="row-actions mt-5">${buildActionButtons(record)}</div>
+        `;
+        staffCards.appendChild(card);
+    });
+};
+
+const renderSections = () => {
+    applyFilters();
+    renderWardenSection();
+    renderStaffSection();
+    updateSummary();
+};
+
+const loadPageData = async () => {
+    const requestId = ++loadRequestId;
+    visibleWardenRecords = [];
+    visibleStaffRecords = [];
+    wardenTable.innerHTML = `<tr><td colspan="5" class="px-6 py-10 text-center text-slate-400">${escapeHtml("Loading wardens...")}</td></tr>`;
+    staffTable.innerHTML = `<tr><td colspan="7" class="px-6 py-10 text-center text-slate-400">${escapeHtml("Loading staff records...")}</td></tr>`;
+    wardenCards.innerHTML = `<article class="mobile-card empty-state">${escapeHtml("Loading wardens...")}</article>`;
+    staffCards.innerHTML = `<article class="mobile-card empty-state">${escapeHtml("Loading staff records...")}</article>`;
+    updateSummary();
+
+    try {
+        const [hostelPayload, staffPayload, wardenPayload] = await Promise.all([
+            request(API.hostels),
+            request(API.staff),
+            request(API.wardens)
+        ]);
+
+        if (requestId !== loadRequestId) {
+            return;
+        }
+
+        hostels = (hostelPayload.data || []).map(normalizeHostel);
+        staffRecords = (staffPayload.data || []).map(normalizeStaffRecord);
+        wardenRecords = (wardenPayload.data || []).map(normalizeWardenRecord);
+        populateHostelOptions();
+        renderSections();
+    } catch (error) {
+        visibleWardenRecords = [];
+        visibleStaffRecords = [];
+        wardenTable.innerHTML = `<tr><td colspan="5" class="px-6 py-10 text-center text-slate-400">${escapeHtml(error.message)}</td></tr>`;
+        staffTable.innerHTML = `<tr><td colspan="7" class="px-6 py-10 text-center text-slate-400">${escapeHtml(error.message)}</td></tr>`;
+        wardenCards.innerHTML = `<article class="mobile-card empty-state">${escapeHtml(error.message)}</article>`;
+        staffCards.innerHTML = `<article class="mobile-card empty-state">${escapeHtml(error.message)}</article>`;
+        updateSummary();
+    }
+};
+
+const resetForm = () => {
+    memberForm.reset();
+    editState = null;
+    memberTypeInput.value = "staff";
+    memberTypeBadge.textContent = "Staff";
+    memberTypeBadge.className = "entity-badge staff";
+    modalTitle.textContent = "Add Staff";
+    hostelSelect.value = selectedHostelId || String(hostels[0]?.id || "");
+    emailLabel.innerHTML = "Email";
+    cnicInput.value = "";
+    salaryInput.value = "";
+    clearFieldErrors();
+    setFormError("");
+    setModalType("staff");
+};
+
+const setModalType = (type) => {
+    const isWarden = type === "warden";
+    memberTypeInput.value = type;
+    memberTypeBadge.textContent = isWarden ? "Warden" : "Staff";
+    memberTypeBadge.className = `entity-badge ${isWarden ? "warden" : "staff"}`;
+    emailLabel.innerHTML = isWarden ? `Email <span class="text-rose-300">*</span>` : "Email";
+
+    staffOnlyFields.forEach((field) => field.classList.toggle("hidden", isWarden));
+    wardenOnlyFields.forEach((field) => field.classList.toggle("hidden", !isWarden));
+
+    roleInput.required = !isWarden;
+    salaryInput.required = !isWarden;
+    hostelSelect.required = !isWarden;
+    emailInput.required = isWarden;
+    cnicInput.required = isWarden;
+};
+
+const getRecordByKey = (type, id) => {
+    const source = type === "warden" ? wardenRecords : staffRecords;
+    return source.find((record) => record.id === Number(id)) || null;
+};
+
+const openMemberModal = (type, mode, record = null) => {
+    resetForm();
+    setModalType(type);
+    modalTitle.textContent = `${mode === "edit" ? "Edit" : "Add"} ${type === "warden" ? "Warden" : "Staff"}`;
+
+    if (mode === "edit" && record) {
+        editState = { type, id: record.id };
+        fullNameInput.value = record.fullName;
+        phoneInput.value = record.phone === "Not Available" ? "" : record.phone;
+        emailInput.value = record.email || "";
+
+        if (type === "staff") {
+            roleInput.value = record.role;
+            salaryInput.value = record.salary;
+            hostelSelect.value = String(record.hostelId || selectedHostelId || hostels[0]?.id || "");
+        } else {
+            cnicInput.value = record.cnic || "";
+        }
+    }
+
+    memberModal.classList.remove("hidden");
+};
+
+const closeMemberModal = () => {
+    memberModal.classList.add("hidden");
+    resetForm();
+};
+
+const buildDetailCard = (label, value) => `
+    <div class="detail-item">
+        <p class="detail-label">${escapeHtml(label)}</p>
+        <p class="detail-value">${escapeHtml(value)}</p>
+    </div>
+`;
+
+const openDetailsModal = (record) => {
+    detailsTitle.textContent = record.fullName;
+    detailsContent.innerHTML = record.entityType === "warden"
+        ? [
+            buildDetailCard("Email", record.email || "Not Available"),
+            buildDetailCard("Phone", record.phone),
+            buildDetailCard("CNIC", record.cnic || "N/A"),
+        ].join("")
+        : [
+            buildDetailCard("Role", record.role),
+            buildDetailCard("Salary", formatCurrency(record.salary)),
+            buildDetailCard("Hostel", record.hostelName || "Not Assigned"),
+            buildDetailCard("Phone", record.phone),
+            buildDetailCard("Email", record.email || "Not Available"),
+        ].join("");
+    detailsModal.classList.remove("hidden");
+};
+
+const closeDetailsModal = () => detailsModal.classList.add("hidden");
+
+const openConfirmModal = (record) => {
+    deleteState = { type: record.entityType, id: record.id, name: record.fullName };
+    confirmTitle.textContent = `Delete ${record.entityType === "warden" ? "Warden" : "Staff"}`;
+    confirmText.textContent = `This will permanently remove ${record.fullName}.`;
+    confirmModal.classList.remove("hidden");
+};
+
+const closeConfirmModal = () => {
+    deleteState = null;
+    confirmModal.classList.add("hidden");
+};
+
+const validateMemberForm = () => {
+    const type = memberTypeInput.value;
+    const values = {
+        full_name: fullNameInput.value.trim(),
+        role: roleInput.value.trim(),
+        phone: phoneInput.value.trim(),
+        email: emailInput.value.trim(),
+        salary_raw: salaryInput.value.trim(),
+        salary: Number(salaryInput.value),
+        hostel_id: hostelSelect.value,
+        cnic: cnicInput.value.trim()
+    };
+    const errors = {};
+
+    if (!values.full_name) {
+        errors.full_name = "Full name is required.";
+    }
+
+    if (!values.phone) {
+        errors.phone = "Phone is required.";
+    } else if (!isValidPhone(values.phone)) {
+        errors.phone = "Enter a valid phone number.";
+    }
+
+    if (type === "staff") {
+        if (!values.role) {
+            errors.role = "Role is required.";
+        }
+
+        if (!values.hostel_id) {
+            errors.hostel_id = "Hostel is required.";
+        }
+
+        if (!values.salary_raw) {
+            errors.salary = "Salary is required.";
+        } else if (!Number.isFinite(values.salary) || values.salary < 0) {
+            errors.salary = "Salary must be a non-negative number.";
+        }
+
+        if (values.email && !isValidEmail(values.email)) {
+            errors.email = "Enter a valid email address.";
+        }
+    } else {
+        if (!values.email) {
+            errors.email = "Email is required for wardens.";
+        } else if (!isValidEmail(values.email)) {
+            errors.email = "Enter a valid email address.";
+        }
+
+        if (!values.cnic) {
+            errors.cnic = "CNIC is required.";
+        } else if (!isValidCnic(values.cnic)) {
+            errors.cnic = "Enter a valid CNIC.";
+        }
+    }
+
+    return { type, values, errors };
+};
+
+const buildPayload = (type, values) => type === "warden"
+    ? {
+        full_name: values.full_name,
+        email: values.email,
+        phone: values.phone,
+        cnic: values.cnic
+    }
+    : {
+        full_name: values.full_name,
+        role: values.role,
+        phone: values.phone,
+        email: values.email || null,
+        salary: values.salary,
+        hostel_id: Number(values.hostel_id)
+    };
+
+const handleSubmit = async (event) => {
+    event.preventDefault();
+    clearFieldErrors();
+    setFormError("");
+
+    const { type, values, errors } = validateMemberForm();
+    Object.entries(errors).forEach(([field, message]) => setFieldError(field, message));
+
+    if (Object.keys(errors).length) {
+        setFormError("Correct the highlighted fields before saving.");
+        return;
+    }
+
+    const baseUrl = type === "warden" ? API.wardens : API.staff;
+    const method = editState ? "PUT" : "POST";
+    const url = editState ? `${baseUrl}/${editState.id}` : baseUrl;
+    const wasEdit = Boolean(editState);
+
+    try {
+        await request(url, {
+            method,
+            body: JSON.stringify(buildPayload(type, values))
+        });
+
+        closeMemberModal();
+        showPageMessage(`${type === "warden" ? "Warden" : "Staff"} ${wasEdit ? "updated" : "created"} successfully.`);
+        await loadPageData();
+    } catch (error) {
+        setFormError(error.message);
+    }
+};
+
+const handleDelete = async () => {
+    if (!deleteState) {
+        return;
+    }
+
+    const deletedType = deleteState.type;
+    try {
+        const url = `${deletedType === "warden" ? API.wardens : API.staff}/${deleteState.id}`;
+        await request(url, { method: "DELETE" });
+        closeConfirmModal();
+        showPageMessage(`${deletedType === "warden" ? "Warden" : "Staff"} deleted successfully.`);
+        await loadPageData();
+    } catch (error) {
+        closeConfirmModal();
+        showPageMessage(error.message, "error");
+    }
+};
+
+const handleTableAction = (event) => {
     const button = event.target.closest("[data-action]");
     if (!button) {
         return;
     }
 
-    const member = staffMembers.find((item) => item.id === Number(button.dataset.id));
-    if (!member) {
+    const record = getRecordByKey(button.dataset.type, button.dataset.id);
+    if (!record) {
         return;
     }
 
-    const action = button.dataset.action;
-
-    if (action === "view") {
-        openDetailsModal(member);
-    } else if (action === "edit") {
-        openFormModal("edit", member);
-    } else if (action === "delete") {
-        openConfirmModal(member);
-    }
-});
-
-confirmDeleteButton.addEventListener("click", () => {
-    if (deleteId === null) {
+    if (button.dataset.action === "view") {
+        openDetailsModal(record);
         return;
     }
 
-    staffMembers = staffMembers.filter((member) => member.id !== deleteId);
-    closeConfirmModal();
-    renderStaff();
-});
+    if (button.dataset.action === "edit") {
+        openMemberModal(record.entityType, "edit", record);
+        return;
+    }
 
-openStaffModalButton.addEventListener("click", () => {
-    openFormModal("add");
-});
+    if (button.dataset.action === "delete") {
+        openConfirmModal(record);
+    }
+};
 
-mobileMenuButton.addEventListener("click", toggleSidebar);
-mobileOverlay.addEventListener("click", closeMobileSidebar);
-window.addEventListener("resize", handleResize);
+const initializeEventListeners = () => {
+    mobileMenuButton.addEventListener("click", () => body.classList.contains("sidebar-open") ? closeMobileSidebar() : openMobileSidebar());
+    mobileOverlay.addEventListener("click", closeMobileSidebar);
+    window.addEventListener("resize", handleResize);
 
-document.querySelectorAll("[data-close-staff-modal]").forEach((button) => {
-    button.addEventListener("click", closeFormModal);
-});
-
-document.querySelectorAll("[data-close-details]").forEach((button) => {
-    button.addEventListener("click", closeDetailsModal);
-});
-
-document.querySelectorAll("[data-close-confirm]").forEach((button) => {
-    button.addEventListener("click", closeConfirmModal);
-});
-
-[staffModal, detailsModal, confirmModal].forEach((modal) => {
-    modal.addEventListener("click", (event) => {
-        if (event.target !== modal) {
-            return;
-        }
-
-        if (modal === staffModal) {
-            closeFormModal();
-        } else if (modal === detailsModal) {
-            closeDetailsModal();
-        } else {
-            closeConfirmModal();
-        }
+    hostelFilter.addEventListener("change", (event) => {
+        selectedHostelId = event.target.value;
+        renderSections();
     });
-});
 
+    staffSearchInput.addEventListener("input", (event) => {
+        searchTerm = event.target.value;
+        renderSections();
+    });
+
+    openStaffModalButton.addEventListener("click", () => openMemberModal("staff", "create"));
+    openWardenModalButton.addEventListener("click", () => openMemberModal("warden", "create"));
+    memberForm.addEventListener("submit", handleSubmit);
+    confirmDeleteButton.addEventListener("click", handleDelete);
+
+    [fullNameInput, roleInput, phoneInput, emailInput, salaryInput, hostelSelect, cnicInput].forEach((input) => {
+        input.addEventListener("input", () => {
+            setFormError("");
+            Object.keys(fieldMap).forEach((field) => setFieldError(field, ""));
+        });
+        input.addEventListener("change", () => {
+            setFormError("");
+            Object.keys(fieldMap).forEach((field) => setFieldError(field, ""));
+        });
+    });
+
+    wardenTable.addEventListener("click", handleTableAction);
+    wardenCards.addEventListener("click", handleTableAction);
+    staffTable.addEventListener("click", handleTableAction);
+    staffCards.addEventListener("click", handleTableAction);
+
+    document.querySelectorAll("[data-close-member-modal]").forEach((button) => button.addEventListener("click", closeMemberModal));
+    document.querySelectorAll("[data-close-details]").forEach((button) => button.addEventListener("click", closeDetailsModal));
+    document.querySelectorAll("[data-close-confirm]").forEach((button) => button.addEventListener("click", closeConfirmModal));
+
+    [memberModal, detailsModal, confirmModal].forEach((modal) => {
+        modal.addEventListener("click", (event) => {
+            if (event.target !== modal) {
+                return;
+            }
+
+            if (modal === memberModal) {
+                closeMemberModal();
+            } else if (modal === detailsModal) {
+                closeDetailsModal();
+            } else {
+                closeConfirmModal();
+            }
+        });
+    });
+};
+
+initializeEventListeners();
 handleResize();
-populateHostelOptions();
-renderStaff();
+void loadPageData();

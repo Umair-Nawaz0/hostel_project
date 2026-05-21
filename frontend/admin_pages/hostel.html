@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../css/admin_css/hostel.css">
+    <link rel="stylesheet" href="../css/admin_css/erp-theme.css">
 </head>
 <body class="min-h-screen overflow-x-hidden bg-slate-950 text-slate-100">
     <div class="page-bg"></div>
@@ -34,8 +35,7 @@
             <a href="rooms.html" class="nav-item"><span class="nav-icon">🛏️</span><span class="nav-label">Rooms</span></a>
             <a href="students.html" class="nav-item"><span class="nav-icon">🎓</span><span class="nav-label">Students</span></a>
             <a href="staff.html" class="nav-item"><span class="nav-icon">🧑‍💼</span><span class="nav-label">Staff</span></a>
-            <a href="complaints.html" class="nav-item"><span class="nav-icon">📣</span><span class="nav-label">Complaints</span></a>
-            <a href="maintenance.html" class="nav-item"><span class="nav-icon">🛠️</span><span class="nav-label">Maintenance</span></a>
+            <a href="allocations.html" class="nav-item"><span class="nav-icon">🧾</span><span class="nav-label">Allocations</span></a>
             <a href="payments.html" class="nav-item"><span class="nav-icon">💳</span><span class="nav-label">Payments</span></a>
         </nav>
         <a href="login.html" class="nav-item logout-item mt-8"><span class="nav-icon">↩</span><span class="nav-label">Logout</span></a>
@@ -53,8 +53,7 @@
                 <a href="rooms.html" class="desktop-nav-link">Rooms</a>
                 <a href="students.html" class="desktop-nav-link">Students</a>
                 <a href="staff.html" class="desktop-nav-link">Staff</a>
-                <a href="complaints.html" class="desktop-nav-link">Complaints</a>
-                <a href="maintenance.html" class="desktop-nav-link">Maintenance</a>
+                <a href="allocations.html" class="desktop-nav-link">Allocations</a>
                 <a href="payments.html" class="desktop-nav-link">Payments</a>
             </nav>
             <div class="flex items-center gap-3">
@@ -63,22 +62,31 @@
             </div>
         </header>
 
-        <section class="topbar-shell page-enter mb-6 flex flex-col gap-4 px-4 py-5 sm:px-6 lg:flex-row lg:items-center lg:justify-between">
-            <div>
-                <p class="text-sm uppercase tracking-[0.35em] text-cyan-200/70">Administration</p>
-                <h1 class="mt-2 text-2xl font-semibold text-white sm:text-3xl">Hostel Management</h1>
+        <section class="topbar-shell page-enter mb-6 flex flex-col gap-4 px-4 py-5 sm:px-6">
+            <div class="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+                <div>
+                    <p class="text-sm uppercase tracking-[0.35em] text-cyan-200/70">Administration</p>
+                    <h1 class="mt-2 text-2xl font-semibold text-white sm:text-3xl">Hostel Management</h1>
+                </div>
+                <div class="flex w-full flex-col gap-3 md:flex-row xl:w-auto">
+                    <select id="hostelFilter" class="control-shell rounded-2xl px-4 py-3 text-sm text-slate-100 outline-none">
+                        <option value="">All Hostels</option>
+                    </select>
+                    <button id="openAddHostel" type="button" class="add-btn inline-flex items-center justify-center rounded-2xl px-5 py-3 text-sm font-semibold text-white">
+                        + Add Hostel
+                    </button>
+                </div>
             </div>
-            <button id="openAddHostel" type="button" class="add-btn inline-flex items-center justify-center rounded-2xl px-5 py-3 text-sm font-semibold text-white">
-                + Add Hostel
-            </button>
         </section>
 
         <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             <article class="summary-card p-5"><p class="summary-label">Total Hostels</p><p id="totalHostels" class="summary-value">0</p></article>
-            <article class="summary-card p-5"><p class="summary-label">Total Capacity</p><p id="totalCapacity" class="summary-value">0</p></article>
+            <article class="summary-card p-5"><p class="summary-label">Available Rooms</p><p id="availableRooms" class="summary-value">0</p></article>
             <article class="summary-card p-5"><p class="summary-label">Total Rooms</p><p id="totalRooms" class="summary-value">0</p></article>
             <article class="summary-card p-5"><p class="summary-label">Occupied Rooms</p><p id="occupiedRooms" class="summary-value">0</p></article>
         </section>
+
+        <p id="pageMessage" class="mt-4 hidden rounded-2xl border px-4 py-3 text-sm"></p>
 
         <section id="hostelGrid" class="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3"></section>
     </main>
@@ -91,12 +99,46 @@
             </div>
             <p id="formError" class="mb-4 hidden rounded-2xl border border-rose-400/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-200"></p>
             <form id="hostelForm" class="grid gap-4 sm:grid-cols-2">
-                <div><label class="form-label" for="hostelName">Hostel Name</label><input id="hostelName" class="form-input mt-2 w-full" type="text"></div>
-                <div><label class="form-label" for="hostelLocation">Location / City</label><input id="hostelLocation" class="form-input mt-2 w-full" type="text"></div>
-                <div class="sm:col-span-2"><label class="form-label" for="hostelAddress">Full Address</label><textarea id="hostelAddress" class="form-input mt-2 min-h-[120px] w-full"></textarea></div>
-                <div><label class="form-label" for="hostelCapacity">Capacity</label><input id="hostelCapacity" class="form-input mt-2 w-full" type="number" min="1"></div>
-                <div><label class="form-label" for="hostelRooms">Total Rooms</label><input id="hostelRooms" class="form-input mt-2 w-full" type="number" min="1"></div>
-                <div class="sm:col-span-2"><label class="form-label" for="wardenName">Warden Name</label><input id="wardenName" class="form-input mt-2 w-full" type="text"></div>
+                <div>
+                    <label class="form-label" for="hostelName">Hostel Name <span class="text-rose-300">*</span></label>
+                    <input id="hostelName" class="form-input mt-2 w-full" type="text" minlength="3" maxlength="120" required>
+                    <p id="hostelNameError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+                <div>
+                    <label class="form-label" for="hostelCity">City <span class="text-rose-300">*</span></label>
+                    <input id="hostelCity" class="form-input mt-2 w-full" type="text" maxlength="80" required>
+                    <p id="hostelCityError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+                <div class="sm:col-span-2">
+                    <label class="form-label" for="hostelAddress">Full Address <span class="text-rose-300">*</span></label>
+                    <textarea id="hostelAddress" class="form-input mt-2 min-h-[120px] w-full" required></textarea>
+                    <p id="hostelAddressError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+                <div>
+                    <label class="form-label" for="hostelRooms">Total Rooms <span class="text-rose-300">*</span></label>
+                    <input id="hostelRooms" class="form-input mt-2 w-full" type="number" min="1" required>
+                    <p id="hostelRoomsError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+                <div>
+                    <label class="form-label" for="contactPhone">Contact Phone <span class="text-rose-300">*</span></label>
+                    <input id="contactPhone" class="form-input mt-2 w-full" type="tel" maxlength="20" required>
+                    <p id="contactPhoneError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+                <div>
+                    <label class="form-label" for="hostelEmail">Email <span class="text-rose-300">*</span></label>
+                    <input id="hostelEmail" class="form-input mt-2 w-full" type="email" maxlength="100" required>
+                    <p id="hostelEmailError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+                <div>
+                    <label class="form-label" for="establishedYear">Established Year</label>
+                    <input id="establishedYear" class="form-input mt-2 w-full" type="number" min="1901" max="2155">
+                    <p id="establishedYearError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
+                <div class="sm:col-span-2">
+                    <label class="form-label" for="wardenSelect">Warden Assignment</label>
+                    <select id="wardenSelect" class="form-input mt-2 w-full"></select>
+                    <p id="wardenSelectError" class="mt-2 hidden text-xs text-rose-200"></p>
+                </div>
                 <div class="sm:col-span-2 flex justify-end gap-3 pt-2">
                     <button type="button" data-close-modal class="rounded-2xl border border-white/10 px-5 py-3 text-sm text-slate-200">Cancel</button>
                     <button type="submit" class="add-btn rounded-2xl px-5 py-3 text-sm font-semibold text-white">Save</button>
@@ -106,12 +148,12 @@
     </div>
 
     <div id="detailsModal" class="modal-backdrop hidden z-50 flex items-center justify-center p-4">
-        <div class="modal-panel w-full max-w-2xl p-6">
+        <div class="modal-panel details-modal-panel w-full max-w-5xl p-6">
             <div class="mb-5 flex items-center justify-between gap-4">
                 <h2 id="detailsTitle" class="text-xl font-semibold text-white">Hostel Details</h2>
                 <button type="button" data-close-details class="text-2xl text-slate-400">×</button>
             </div>
-            <div id="detailsContent" class="space-y-4"></div>
+            <div id="detailsContent" class="details-shell"></div>
         </div>
     </div>
 
