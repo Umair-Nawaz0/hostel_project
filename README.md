@@ -149,3 +149,88 @@ This makes Hostel management system is scalable, flexible, and suitable for real
 > 🔗 **Repository URL:** `https://github.com/Umair-Nawaz0/hostel_project`
 
 ---
+
+# How to Run the Application
+
+## 1. Download the Repository
+Download or clone the repository from the GitHub link provided above.
+
+```bash
+git clone https://github.com/Umair-Nawaz0/hostel_project
+
+
+## 2. Create MySQL Database
+
+Open MySQL and create a new database.
+
+Example:
+
+```sql
+CREATE DATABASE hostel_management;
+```
+
+After creating the database, import/run the SQL queries provided inside the database folder.
+
+---
+
+## 3. Open Backend Folder
+
+Open terminal and move to the backend directory.
+
+```bash
+cd backend
+```
+
+---
+
+## 4. Install Dependencies
+
+Install all required Node.js packages.
+
+```bash
+npm install
+```
+
+---
+
+## 5. Create `.env` File
+
+Inside the backend folder, create a `.env` file and add your database configuration.
+
+Example:
+
+```env
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=your_password
+DB_NAME=hostel_management
+DB_PORT=3306
+PORT=5000
+```
+
+---
+
+## 6. Run Backend Server
+
+Start the backend server using:
+
+```bash
+npm run dev
+```
+
+If everything is configured correctly, the server will start successfully.
+
+---
+
+## 7. Open Frontend
+
+Open the frontend HTML files in your browser.
+
+Example:
+
+- `login.html`
+- `dashboard.html`
+
+Now the application should work properly.
+
+---
